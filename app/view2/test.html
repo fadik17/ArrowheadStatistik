@@ -6,11 +6,141 @@
     <title>stats</title>
     <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.3.14/angular.min.js"></script>
     <script src="test.js"></script>
+    <style>
+        table, th, td {
+            border: 1px solid black;
+            border-collapse: collapse;
+        }
+        th, td {
+            padding: 5px;
+            text-align: left;
+        }
+        </style>
 </head>
 
 <body ng-app="app">
+<p>Select Faction</p>
+<form action="test.json">
+    <select name="Faction">
+        <option value="bugs">Bugs</option>
+        <option value="the_illuminate">The Illuminate</option>
+        <option value="cyborgs">Cyborgs</option>
+    </select>
+    <br><br>
+    <input type="submit">
+</form>
      <div ng-controller="WebApiCtrl">
+         <h2>ArrowHead stats:</h2>
          {{result}}
+         <h2>Campaign Status</h2>
+         <table style="width:100%">
+             <tr>
+                 <th>Time: </th>
+                 <th>Error Code: </th>
+                 <th>Season: </th>
+                 <th>Points: </th>
+                 <th>Points taken:</th>
+                 <th>Max points</th>
+                 <th>Status</th>
+                 <th>Introduction Order:</th>
+             </tr>
+             <tr>
+                 <td>{{result.time}}</td>
+
+                 <td>{{result.error_code}}</td>
+                 <!--Season-->
+                 <td>
+                     <li ng-repeat="stat in result.campaign_status">
+                         {{stat.season}}
+                     </li>
+                 </td>
+                 <!--Points-->
+                 <td>
+                     <li ng-repeat="stat in result.campaign_status">
+                         {{stat.points}}
+                     </li>
+                 </td>
+                 <!--Points Taken-->
+                 <td>
+                     <li ng-repeat="stat in result.campaign_status">
+                         {{stat.points_taken}}
+                     </li>
+                 </td>
+                 <!--Max Points-->
+                 <td>
+                     <li ng-repeat="stat in result.campaign_status">
+                         {{stat.points_max}}
+                     </li>
+                 </td>
+                 <!--Status-->
+                 <td>
+                     <li ng-repeat="stat in result.campaign_status">
+                         {{stat.status}}
+                     </li>
+                 </td>
+                 <!--Introduction Order-->
+                 <td>
+                     <li ng-repeat="stat in result.campaign_status">
+                         {{stat.introduction_order}}
+                     </li>
+                 </td>
+             </tr>
+         </table>
+
+         <!--Defend Event stats-->
+         <h2>Defend Event</h2>
+         <table style="width:100%">
+             <tr>
+                 <th>Season: </th>
+                 <th>Event ID: </th>
+                 <th>Start Time:</th>
+                 <th>End Time</th>
+                 <th>Region:</th>
+                 <th>Enemy:</th>
+                 <th>Max points:</th>
+                 <th>Points:</th>
+                 <th>Status:</th>
+             </tr>
+             <tr>
+                 <td>
+                     {{result.defend_event.season}}
+                 </td>
+
+                 <td>
+                     {{result.defend_event.event_id}}
+                 </td>
+                 <!--Season-->
+                 <td>
+                     {{result.defend_event.start_time}}
+                 </td>
+                 <!--end time-->
+                 <td>
+                     {{result.defend_event.end_time}}
+                 </td>
+                 <!--region-->
+                 <td>
+                     {{result.defend_event.region}}
+                 </td>
+                 <!--enemy-->
+                 <td>
+                     {{result.defend_event.enemy}}
+                 </td>
+                 <!--max points-->
+                 <td>
+                     {{result.defend_event.points_max}}
+                 </td>
+                 <!--Points-->
+                 <td>
+                     {{result.defend_event.points}}
+                 </td>
+                 <!--status-->
+                 <td>
+                     {{result.defend_event.status}}
+                 </td>
+             </tr>
+         </table>
+         <!--Attack Event stats-->
+         <h2>Attack Event</h2>
      </div>
 </body>
 </html>

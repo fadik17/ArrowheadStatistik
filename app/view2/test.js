@@ -6,6 +6,7 @@ var app = angular.module('app', [], function($httpProvider){
     $httpProvider.defaults.headers.post['Access-Control-Allow-Origin'] = '*';
 });
 
+
 app.controller("WebApiCtrl", function($scope, $http){
     $http({
         url : 'https://api.helldiversgame.com/0.3/',
@@ -14,11 +15,12 @@ app.controller("WebApiCtrl", function($scope, $http){
         headers: {'Content-Type': 'application/x-www-form-urlencoded'}
     }).then(function(response) {
         console.log(response);
-        $scope.result = response;
+        $scope.result = response.data;
+        //$scope.campaign = $scope.result.campaign_status;
     }, function(response) {
         //fail case
         console.log(response);
-        $scope.result = response;
+        $scope.result = response.data;
     });
 });
 
