@@ -152,6 +152,8 @@
                  <th>Max Points:</th>
                  <th>Points:</th>
                  <th>Status:</th>
+                 <th>Players at Start:</th>
+                 <th>Max Event ID:</th>
              </tr>
              <tr>
                  <td>
@@ -194,6 +196,16 @@
                          {{attack.status}}
                      </li>
                  </td>
+                 <td>
+                     <li ng-repeat="attack in result.attack_events">
+                         {{attack.players_at_start}}
+                     </li>
+                 </td>
+                 <td>
+                     <li ng-repeat="attack in result.attack_events">
+                         {{attack.max_event_id}}
+                     </li>
+                 </td>
              </tr>
          </table>
          <!--Statistics-->
@@ -204,16 +216,16 @@
                  <th>Season Duration:</th>
                  <th>Enemy:</th>
                  <th>Players:</th>
-                 <th>Total_Unique_Players:</th>
+                 <th>Total Unique Players:</th>
                  <th>Missions:</th>
                  <th>Successful Missions:</th>
                  <th>Completed Planets:</th>
                  <th>Defend Events:</th>
-                 <th>successful_defend_events:</th>
-                 <th>attack_events:</th>
-                 <th>successful_attack_events:</th>
+                 <th>Successful Defend Events:</th>
+                 <th>Attack Events:</th>
+                 <th>Successful Attack Events:</th>
                  <th>Deaths:</th>
-                 <th>Killss:</th>
+                 <th>Kills:</th>
                  <th>Accidentals:</th>
                  <th>Shots:</th>
                  <th>Hits:</th>
