@@ -196,6 +196,120 @@
                  </td>
              </tr>
          </table>
+         <!--Statistics-->
+         <h2>Statistics</h2>
+         <table style="width:100%">
+             <tr>
+                 <th>Season:</th>
+                 <th>Season Duration:</th>
+                 <th>Enemy:</th>
+                 <th>Players:</th>
+                 <th>Total_Unique_Players:</th>
+                 <th>Missions:</th>
+                 <th>Successful Missions:</th>
+                 <th>Completed Planets:</th>
+                 <th>Defend Events:</th>
+                 <th>successful_defend_events:</th>
+                 <th>attack_events:</th>
+                 <th>successful_attack_events:</th>
+                 <th>Deaths:</th>
+                 <th>Killss:</th>
+                 <th>Accidentals:</th>
+                 <th>Shots:</th>
+                 <th>Hits:</th>
+                 <th>Deaths:</th>
+
+             </tr>
+             <tr>
+                 <td>
+                     <li ng-repeat="attack in result.statistics">
+                         {{attack.season}}
+                     </li>
+                 </td>
+                 <td>
+                     <li ng-repeat="attack in result.statistics">
+                         {{attack.season_duration}
+                     </li>
+                 </td>
+                 <td>
+                     <li ng-repeat="attack in result.statistics">
+                         {{attack.enemy}}
+                     </li>
+                 </td>
+                 <td>
+                     <li ng-repeat="attack in result.statistics">
+                         {{attack.players}}
+                     </li>
+                 </td>
+                 <td>
+                     <li ng-repeat="attack in result.statistics">
+                         {{attack.total_unique_players}}
+                     </li>
+                 </td>
+                 <td>
+                     <li ng-repeat="attack in result.statistics">
+                         {{attack.missions}}
+                     </li>
+                 </td>
+                 <td>
+                     <li ng-repeat="attack in result.statistics">
+                         {{attack.successful_missions}}
+                     </li>
+                 </td>
+
+                 <td>
+                     <li ng-repeat="attack in result.statistics">
+                         {{attack.completed_planets}}
+                     </li>
+                 </td>
+                 <td>
+                     <li ng-repeat="attack in result.statistics">
+                         {{attack.defend_events}}
+                     </li>
+                 </td>
+                 <td>
+                     <li ng-repeat="attack in result.statistics">
+                         {{attack.successful_defend_events}}
+                     </li>
+                 </td>
+                 <td>
+                     <li ng-repeat="attack in result.statistics">
+                         {{attack.attack_events}}
+                     </li>
+                 </td>
+                 <td>
+                     <li ng-repeat="attack in result.statistics">
+                         {{attack.successful_attack_events}}
+                     </li>
+                 </td>
+                 <td>
+                     <li ng-repeat="attack in result.statistics">
+                         {{attack.deaths}}
+                     </li>
+                 </td>
+                 <td>
+                     <li ng-repeat="attack in result.statistics">
+                         {{attack.kills}}
+                     </li>
+                 </td>
+                 <td>
+                     <li ng-repeat="attack in result.statistics">
+                         {{attack.accidentals}}
+                     </li>
+                 </td>
+                 <td>
+                     <li ng-repeat="attack in result.statistics">
+                         {{attack.shots}}
+                     </li>
+                 </td>
+                 <td>
+                     <li ng-repeat="attack in result.statistics">
+                         {{attack.hits}}
+                     </li>
+                 </td>
+
+             </tr>
+         </table>
 
      </div>
 </body>
