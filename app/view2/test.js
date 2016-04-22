@@ -2,6 +2,17 @@
  * Created by Teddy on 2016-04-15.
  */
 
+function evalSlider(){
+    var sliderVal=document.getElementById('rating').value;
+    document.getElementById('sliderValue').innerHTML=sliderVal;
+}
+
+// används inte förnärvarande
+function correctSlider(){
+    var sliderVal=document.getElementById('getNumbers').value;
+    document.getElementById('rating').innerHTML=sliderVal;
+}
+
 
 var app = angular.module('app', [], function($httpProvider){
     $httpProvider.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded';
@@ -30,7 +41,6 @@ app.controller("WebApiCtrl", function($scope, $http){
 
     }
 });
-
 
 
 jQuery(document).ready(function ($) {

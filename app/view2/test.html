@@ -11,6 +11,8 @@
 </head>
 
 <body ng-app="app">
+
+
 <div ng-controller="WebApiCtrl">
     <h1>Incredibly Basic Slider</h1>
     <div id="slider">
@@ -19,8 +21,13 @@
         <ul>
             <li style="background: #aaa;">{{lol}}</li>
         </ul>
+        <br />
+        <form style="text-align:center">
+            <input type="range" id="rating" min="1" max="50" value="1" step="1" onchange="evalSlider()"/>
+            Dag:<output id="sliderValue"></output>
+        </form>
     </div>
-
+    <br />
     <div class="slider_option">
         <input type="checkbox" id="checkbox">
         <label for="checkbox">Autoplay Slider</label>
