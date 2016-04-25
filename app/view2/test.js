@@ -2,8 +2,10 @@
  * Created by Teddy on 2016-04-15.
  */
 
+var sliderVal;
+
 function evalSlider(){
-    var sliderVal=document.getElementById('rating').value;
+    sliderVal=document.getElementById('rating').value;
     document.getElementById('sliderValue').innerHTML=sliderVal;
 }
 
@@ -42,6 +44,22 @@ app.controller("WebApiCtrl", function($scope, $http){
     }
 });
 
+/*
+Göra GET från servern:
+
+ $http({
+ method: 'GET',
+ url: '/someUrl'
+ }).then(function successCallback(response) {
+ // this callback will be called asynchronously
+ // when the response is available
+ }, function errorCallback(response) {
+ // called asynchronously if an error occurs
+ // or server returns response with an error status.
+ });
+
+ länken till koden ovan: https://docs.angularjs.org/api/ng/service/$http
+ */
 
 jQuery(document).ready(function ($) {
 
