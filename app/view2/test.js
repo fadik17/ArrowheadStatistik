@@ -2,7 +2,7 @@
  * Created by Teddy on 2016-04-15.
  */
 
-var sliderVal;
+var sliderVal=1;
 
 function evalSlider(){
     sliderVal=document.getElementById('rating').value;
@@ -37,10 +37,9 @@ app.controller("WebApiCtrl", function($scope, $http){
         console.log(response);
         $scope.result = response.data;
     });
-
-    $scope.lol="Hello world!";
-    $scope.dimension = function (){
-
+    
+    $scope.defaultSlide=function() {
+        document.getElementById("sliderValue").value = "1";
     }
 });
 
@@ -50,6 +49,7 @@ Göra GET från servern:
  $http({
  method: 'GET',
  url: '/someUrl'
+ data : 'action=get_campaign_status'
  }).then(function successCallback(response) {
  // this callback will be called asynchronously
  // when the response is available
@@ -60,51 +60,4 @@ Göra GET från servern:
 
  länken till koden ovan: https://docs.angularjs.org/api/ng/service/$http
  */
-
-jQuery(document).ready(function ($) {
-
-    $('#checkbox').change(function () {
-        setInterval(function () {
-            moveRight();
-        }, 3000);
-    });
-
-    var slideCount = $('#slider ul li').length;
-    var slideWidth = $('#slider ul li').width();
-    var slideHeight = $('#slider ul li').height();
-    var sliderUlWidth = slideCount * slideWidth;
-
-    $('#slider').css({width: slideWidth, height: slideHeight});
-
-    $('#slider ul').css({width: sliderUlWidth, marginLeft: -slideWidth});
-
-    $('#slider ul li:last-child').prependTo('#slider ul');
-
-    function moveLeft() {
-        $('#slider ul').animate({
-            left: +slideWidth
-        }, 200, function () {
-            $('#slider ul li:last-child').prependTo('#slider ul');
-            $('#slider ul').css('left', '');
-        });
-    };
-
-    function moveRight() {
-        $('#slider ul').animate({
-            left: -slideWidth
-        }, 200, function () {
-            $('#slider ul li:first-child').appendTo('#slider ul');
-            $('#slider ul').css('left', '');
-        });
-    };
-
-    $('a.control_prev').click(function () {
-        moveLeft();
-    });
-
-    $('a.control_next').click(function () {
-        moveRight();
-    });
-
-});
 
