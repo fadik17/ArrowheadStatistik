@@ -41,6 +41,11 @@ app.controller("WebApiCtrl", function($scope, $http){
     $scope.defaultSlide=function() {
         document.getElementById("sliderValue").value = "1";
     }
+
+    // möjliggöra dynamisk ändring --> kommer att användas senare
+    $scope.getEventSize=function () {
+        return 50;
+    }
 });
 
 /*
