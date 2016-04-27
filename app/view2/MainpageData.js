@@ -1,7 +1,3 @@
-/**
- * Created by Teddy on 2016-04-15.
- */
-
 var sliderVal=1;
 
 function evalSlider(){
@@ -23,13 +19,6 @@ var app = angular.module('app', [], function($httpProvider){
 
 
 app.controller("WebApiCtrl", function($scope, $http){
-    // igen...
-    /*$http.get({
-        url : 'localhost:8080/post', //url : 'https://api.helldiversgame.com/0.3/' --> det gamla
-        method : "GET",
-        data : 'action=get_campaign_status' // lägg till ytterligare inparamterar som ska skickas in
-      headers: {'Content-Type': 'application/x-www-form-urlencoded'}
-      }*/
     $http.get("http://localhost:8080/post").then(function(response) {
         console.log(response);
         $scope.result = response.data;
@@ -51,21 +40,10 @@ app.controller("WebApiCtrl", function($scope, $http){
     }
 });
 
-/*
-Göra GET från servern:
-
- $http({
- method: 'GET',
- url: '/someUrl'
- data : 'action=get_campaign_status'
- }).then(function successCallback(response) {
- // this callback will be called asynchronously
- // when the response is available
- }, function errorCallback(response) {
- // called asynchronously if an error occurs
- // or server returns response with an error status.
- });
-
- länken till koden ovan: https://docs.angularjs.org/api/ng/service/$http
- */
-
+// igen...
+/*$http.get({
+ url : 'localhost:8080/post', //url : 'https://api.helldiversgame.com/0.3/' --> det gamla
+ method : "GET",
+ data : 'action=get_campaign_status' // lägg till ytterligare inparamterar som ska skickas in
+ headers: {'Content-Type': 'application/x-www-form-urlencoded'}
+ }*/
