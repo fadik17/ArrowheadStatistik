@@ -26,7 +26,7 @@ public class Post_RequestController {
             e.printStackTrace();
         }
 
-        System.setProperty("javax.net.ssl.trustStore", "C:/Users/Teddy/Documents/KTH/Termin_2/Project/Mellan_Server/arrowheadkeystore");
+        System.setProperty("javax.net.ssl.trustStore", "arrowheadkeystore");
         Post_Request executePostRequest = new Post_Request(url, urlParameters);
         String result = executePostRequest.fetchData();
 
