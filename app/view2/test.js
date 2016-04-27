@@ -23,6 +23,7 @@ var app = angular.module('app', [], function($httpProvider){
 
 
 app.controller("WebApiCtrl", function($scope, $http){
+    // igen...
     $http({
         url : 'localhost:8080/post', //url : 'https://api.helldiversgame.com/0.3/' --> det gamla
         method : "GET",
