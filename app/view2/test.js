@@ -24,10 +24,10 @@ var app = angular.module('app', [], function($httpProvider){
 
 app.controller("WebApiCtrl", function($scope, $http){
     $http({
-        url : 'https://api.helldiversgame.com/0.3/',
-        method : "POST",
-        data : 'action=get_campaign_status',
-        headers: {'Content-Type': 'application/x-www-form-urlencoded'}
+        url : 'localhost:8080/post', //url : 'https://api.helldiversgame.com/0.3/' --> det gamla
+        method : "GET",
+        data : 'action=get_campaign_status' // lägg till ytterligare inparamterar som ska skickas in
+    //  headers: {'Content-Type': 'application/x-www-form-urlencoded'}
     }).then(function(response) {
         console.log(response);
         $scope.result = response.data;
