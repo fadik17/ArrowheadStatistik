@@ -11,7 +11,6 @@ import java.util.concurrent.atomic.AtomicLong;
 import org.springframework.web.bind.annotation.CrossOrigin;
 
 /**
- *
  * Created by Teddy on 2016-04-22.
  */
 
