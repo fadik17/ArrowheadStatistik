@@ -13,7 +13,6 @@ function saveEnemyType(){
 
 
 var app = angular.module('app', [], function($httpProvider){
-
     $httpProvider.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded';
     $httpProvider.defaults.headers.post['Access-Control-Allow-Origin'] = '*';
 });
@@ -32,17 +31,17 @@ app.controller("WebApiCtrl", function($scope, $http){
         $scope.result = response.data;
     });
 
-    $scope.getSnapshot=function(){
-        $http.get("http://localhost:8080/x",{
-            params:{"SliderValue":sliderVal}
+
+    $http.get("http://localhost:8080/c=3",{
+            params:{"SliderValue":sliderVal},
+            data: "season=14&start=20&end=20"
         }).success(function (snapResponse){
             console.log("Success",snapResponse);
             $scope.snapResult=snapResponse.data;
         }).error(function (){
             console.log("error");
         });
-    };
-
+    
     $scope.defaultSlide=function() {
         document.getElementById("sliderValue").value = "1";
     }
