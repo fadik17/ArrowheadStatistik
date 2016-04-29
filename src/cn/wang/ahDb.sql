@@ -75,4 +75,17 @@ CREATE TABLE IF NOT EXISTS Statistics(
 	PRIMARY KEY(id)
 );
 
+CREATE TABLE IF NOT EXISTS Calculation (
+	id INT NOT NULL auto_increment,
+	season LONG,
+    snapshot varchar(50),
+    accuracy LONG,
+    accidental_kills LONG,
+    successful_mission_percentage LONG,
+    successful_defend_percentage LONG,
+    successful_attack_percentage LONG,
+    kill_death_rate LONG,
+    enemy LONG,
+    PRIMARY KEY(id)
+);
 
