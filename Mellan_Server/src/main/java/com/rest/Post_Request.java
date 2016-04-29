@@ -1,5 +1,4 @@
 package com.rest;
-
 import java.io.*;
 import java.net.URL;
 import java.net.*;
@@ -9,74 +8,65 @@ import java.net.*;
  */
 public class Post_Request {
 
-    private String url;
-    private String urlParameters;
+        private  String url;
+        private String urlParameters;
 
-    public Post_Request(String url, String urlParameters) {
+        public Post_Request(String url, String urlParameters) {
+            this.url = url;
+            this.urlParameters = urlParameters;
+        }
 
-        this.url = url;
-        this.urlParameters = urlParameters;
-    }
+        public  String fetchData()
+        {
+            HttpURLConnection connection = null;
+            try {
+                //Create connection
+                System.out.println("try");
+                URL urlArrowHeadMasterServer = new URL(url);
+                connection = (HttpURLConnection)urlArrowHeadMasterServer.openConnection();
+                connection.setRequestMethod("POST");
+                connection.setRequestProperty("Content-Type",
+                        "application/x-www-form-urlencoded");
 
-    public String fetchData() {
+                connection.setRequestProperty("Content-Length", "" +
+                        Integer.toString(urlParameters.getBytes().length));
+                connection.setRequestProperty("Content-Language", "en-US");
 
-        HttpURLConnection connection = null;
+                connection.setUseCaches (false);
+                connection.setDoInput(true);
+                connection.setDoOutput(true);
 
-        try {
+                //Send request
+                DataOutputStream wr = new DataOutputStream (
+                        connection.getOutputStream ());
+                wr.writeBytes (urlParameters);
+                wr.flush ();
+                wr.close ();
 
-            //Create connection
-            System.out.println("try");
-            URL urlArrowHeadMasterServer = new URL(url);
-            connection = (HttpURLConnection) urlArrowHeadMasterServer.openConnection();
-            connection.setRequestMethod("POST");
-            connection.setRequestProperty("Content-Type",
-                    "application/x-www-form-urlencoded");
+                //Get Response
+                InputStream is = connection.getInputStream();
+                BufferedReader rd = new BufferedReader(new InputStreamReader(is));
+                String line;
+                StringBuffer response = new StringBuffer();
+                while((line = rd.readLine()) != null) {
+                    response.append(line);
+                    response.append('\r');
+                }
+                rd.close();
 
-            connection.setRequestProperty("Content-Length", "" +
-                    Integer.toString(urlParameters.getBytes().length));
-            connection.setRequestProperty("Content-Language", "en-US");
+                return response.toString();
 
-            connection.setUseCaches(false);
-            connection.setDoInput(true);
-            connection.setDoOutput(true);
+            } catch (Exception e) {
 
-            //Send request
-            DataOutputStream wr = new DataOutputStream(
-                    connection.getOutputStream());
-            wr.writeBytes(urlParameters);
-            wr.flush();
-            wr.close();
+                e.printStackTrace();
+                System.out.println("catch");
+                return null;
 
-            //Get Response
-            InputStream is = connection.getInputStream();
-            BufferedReader rd = new BufferedReader(new InputStreamReader(is));
-            String line;
-            StringBuffer response = new StringBuffer();
-
-            while ((line = rd.readLine()) != null) {
-
-                response.append(line);
-                response.append('\r');
-            }
-
-            rd.close();
-
-            return response.toString();
-
-        } catch (Exception e) {
-
-            e.printStackTrace();
-            System.out.println("catch");
-            return null;
-
-        } finally {
-
-            System.out.println("finally");
-
-            if (connection != null) {
-
-                connection.disconnect();
+            } finally {
+                System.out.println("finally");
+                if(connection != null) {
+                    connection.disconnect();
+                }
             }
         }
-    }
 }
