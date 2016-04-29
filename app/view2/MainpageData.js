@@ -1,8 +1,10 @@
 var sliderVal=1;
 
+
 function evalSlider(){
     sliderVal=document.getElementById('rating').value;
     document.getElementById('sliderValue').innerHTML=sliderVal;
+    
 }
 
 // används inte förnärvarande
@@ -29,7 +31,20 @@ app.controller("WebApiCtrl", function($scope, $http){
         console.log(response);
         $scope.result = response.data;
     });
-    
+
+    $scope.getSnapshot = function() {
+        $http({
+            url: "http://localhost:8080/x",
+            method: "GET",
+            params: {"sliderValue": sliderVal}
+        }).success(function(snapResponse) {
+            console.log("Success", snapResponse);
+            $scope.snapResult = snapResponse.data;
+        }).error(function() {
+            console.log("error");
+        });
+    };
+
     $scope.defaultSlide=function() {
         document.getElementById("sliderValue").value = "1";
     }
