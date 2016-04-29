@@ -1,53 +1,54 @@
-var sliderVal=1;
-var enemyType="bugs";
+var sliderVal = 1;
+var enemyType = "bugs";
 
 
-function evalSlider(){
-    sliderVal=document.getElementById('rating').value;
-    document.getElementById('sliderValue').innerHTML=sliderVal;
+function evalSlider() {
+    sliderVal = document.getElementById('rating').value;
+    document.getElementById('sliderValue').innerHTML = sliderVal;
 }
 
-function saveEnemyType(){
-    enemyType=document.getElementById('enemyType').value;
+function saveEnemyType() {
+    enemyType = document.getElementById('enemyType').value;
 }
 
 
-var app = angular.module('app', [], function($httpProvider){
+var app = angular.module('app', [], function ($httpProvider) {
     $httpProvider.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded';
     $httpProvider.defaults.headers.post['Access-Control-Allow-Origin'] = '*';
 });
 
 
-app.controller("WebApiCtrl", function($scope, $http){
+app.controller("WebApiCtrl", function ($scope, $http) {
 
-    $http.get("http://localhost:8080/post").then(function(response) {
+    $http.get("http://localhost:8080/post").then(function (response) {
         console.log(response);
         $scope.result = response.data;
-    }, function(response) {
+    }, function (response) {
 
         //fail case
-    //    document.write("fail");
+        //    document.write("fail");
         console.log(response);
         $scope.result = response.data;
     });
 
-
-    $http.get("http://localhost:8080/c=3",{
-            params:{"SliderValue":sliderVal},
-            data: "season=14&start=20&end=20"
-        }).success(function (snapResponse){
-            console.log("Success",snapResponse);
-            $scope.snapResult=snapResponse.data;
-        }).error(function (){
-            console.log("error");
-        });
-    
-    $scope.defaultSlide=function() {
-        document.getElementById("sliderValue").value = "1";
+    $scope.defaultSlide = function () {
+        document.getElementById("sliderValue").innerHTML = 1;
     }
 
     // möjliggöra dynamisk ändring --> kommer att användas senare
-    $scope.getEventSize=function () {
+    $scope.getEventSize = function () {
         return 50;
+    }
+}, function ($scope, $http) {
+    var getGet = function () {
+        $http.get("http://localhost:8080/c=3", {
+            params: {"season": 14, "start": 20, "end": 20}
+        }).success(function (snapResponse) {
+            console.log("Success", snapResponse);
+            $scope.snapResult = snapResponse;
+            getGet();
+        }).error(function () {
+            console.log("error");
+        });
     }
 });
