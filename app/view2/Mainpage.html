@@ -9,6 +9,7 @@
     <script src="MainpageData.js"></script>
     <link rel="stylesheet" type="text/css" href="MainpageDesign.css">
     <link rel="stylesheet" type="text/css" href="rangeBarDesign.css">
+    <link rel="stylesheet" type="text/css" href="droplistDesign.css">
 </head>
 
 <body ng-app="app">
@@ -26,24 +27,18 @@
         </p>
         <input style="width:500px;" type="range" id="rating" min="1" max="{{getEventSize()}}" value="1" step="1"
                onchange="evalSlider()" oninput="evalSlider()"/>
+
+        <br /><select id="enemyType" name="Faction" data-value="bugs" onchange="saveEnemyType()">
+            <option value="bugs">Bugs</option>
+            <option value="the_illuminate">Illuminate</option>
+            <option value="cyborgs">Cyborgs</option>
+        </select>
     </form>
     <br/>
 </div>
 
 
 <!-- FÖr att få evalslider att funka  -->
-
-
-<p>Select Faction</p>
-<form action="test.json">
-    <select name="Faction">
-        <option value="bugs">Bugs</option>
-        <option value="the_illuminate">The Illuminate</option>
-        <option value="cyborgs">Cyborgs</option>
-    </select>
-    <br><br>
-    <input type="submit">
-</form>
 <div ng-controller="WebApiCtrl">
     <h2>ArrowHead stats:</h2>
     {{result}}
