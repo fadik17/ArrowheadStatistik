@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 logs/*
 !.gitkeep
 node_modules/
@@ -6,3 +7,6 @@ tmp
 .DS_Store
 .idea
 app/view2/test.html
+=======
+/bin/
+>>>>>>> 5a72f795e7deaedd616f88940302b37657223f91
