@@ -1,5 +1,6 @@
 var sliderVal=1;
 var enemyType="bugs";
+var currentSeason = 2;
 
 
 function evalSlider2() {
@@ -65,13 +66,12 @@ app.controller("WebApiCtrl", function($scope, dataService) {
 
     // möjliggöra dynamisk ändring --> kommer att användas senare
     $scope.getEventSize = function () {
-
-        return 50;
+        return currentSeason;
     };
 
     dataService.getCampaign().then(function(response){
-        
         $scope.campaign=response.data;
+        currentSeason = response.data.campaign_status.season;
     });
 });
 
