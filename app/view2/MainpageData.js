@@ -5,7 +5,7 @@ var enemyType="bugs";
 function evalSlider(){
     sliderVal=document.getElementById('rating').value;
     document.getElementById('sliderValue').innerHTML=sliderVal;
-    $scope.lol();
+    //$scope.lol();
 }
 
 function saveEnemyType(){
@@ -19,7 +19,7 @@ var app = angular.module('app', [], function($httpProvider){
     $httpProvider.defaults.headers.post['Access-Control-Allow-Origin'] = '*';
 });
 
-/*
+
 app.service('dataService', function($http) {
     
     this.getData = function() {
@@ -27,21 +27,34 @@ app.service('dataService', function($http) {
         return $http({
             method: 'GET',
             url: "http://localhost:8080/c=3",
-            params: {"season": 10, "start": sliderVal, "end": sliderVal}
+            params: {"season": "10", "start": sliderVal, "end": sliderVal}
         });
     }
-});*/
+});
 
 
-/*app.controller("WebApiCtrl", function($scope, dataService) {
+app.controller("WebApiCtrl", function($scope, dataService) {
 
     $scope.data = null;
 
-    dataService.getData().then(function(dataResponse) {
+    dataService.getData().then(function (dataResponse) {
 
         $scope.data = dataResponse;
-    });*/
+    });
 
+    $scope.defaultSlide = function () {
+        document.getElementById("sliderValue").value = "1";
+    };
+
+    // möjliggöra dynamisk ändring --> kommer att användas senare
+    $scope.getEventSize = function () {
+        return 50;
+    };
+});
+
+
+
+/*
 app.controller("WebApiCtrl", function($scope, $http){
 
     $http.get("http://localhost:8080/post").then(function(response) {
@@ -75,3 +88,4 @@ app.controller("WebApiCtrl", function($scope, $http){
         return 50;
     };
 });
+    */
