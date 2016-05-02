@@ -2,10 +2,10 @@ var sliderVal=1;
 var enemyType="bugs";
 
 
-function evalSlider(){
+function evalSlider2() {
 
-    sliderVal=document.getElementById('rating').value;
-    document.getElementById('sliderValue').innerHTML=sliderVal;
+    sliderVal = document.getElementById('rating').value;
+    document.getElementById('sliderValue').innerHTML = sliderVal;
 }
 
 function saveEnemyType(){
@@ -28,17 +28,16 @@ app.service('dataService', function($http) {
         // $http() returns a $promise that we can add handlers with .then()
         return $http({
             method: 'GET',
-            url: "http://localhost:8080/c=3",
-            params: {"season": "10", "start": sliderVal, "end": sliderVal}
+            url: "http://localhost:8080/GetSnapshots",
+            params: {"season": sliderVal, "start": sliderVal, "end": sliderVal}
         });
     }
 
     this.getCampaign=function () {
 
         return $http({
-
             method:'GET',
-            url:"http://localhost:8080/post"
+            url:"http://localhost:8080/GetCampaignStatus"
         });
     };
 });
@@ -52,6 +51,12 @@ app.controller("WebApiCtrl", function($scope, dataService) {
 
         $scope.data = dataResponse;
     });
+
+    $scope.evalSlider = function () {
+        dataService.getData().then(function (dataResponse) {
+            $scope.data = dataResponse;
+        });
+    };
 
     $scope.defaultSlide = function () {
 
