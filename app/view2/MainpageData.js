@@ -3,12 +3,13 @@ var enemyType="bugs";
 
 
 function evalSlider(){
+
     sliderVal=document.getElementById('rating').value;
     document.getElementById('sliderValue').innerHTML=sliderVal;
-    //$scope.lol();
 }
 
 function saveEnemyType(){
+
     enemyType=document.getElementById('enemyType').value;
 }
 
@@ -23,6 +24,7 @@ var app = angular.module('app', [], function($httpProvider){
 app.service('dataService', function($http) {
     
     this.getData = function() {
+
         // $http() returns a $promise that we can add handlers with .then()
         return $http({
             method: 'GET',
@@ -30,6 +32,15 @@ app.service('dataService', function($http) {
             params: {"season": "10", "start": sliderVal, "end": sliderVal}
         });
     }
+
+    this.getCampaign=function () {
+
+        return $http({
+
+            method:'GET',
+            url:"http://localhost:8080/post"
+        });
+    };
 });
 
 
@@ -43,16 +54,21 @@ app.controller("WebApiCtrl", function($scope, dataService) {
     });
 
     $scope.defaultSlide = function () {
+
         document.getElementById("sliderValue").value = "1";
     };
 
     // möjliggöra dynamisk ändring --> kommer att användas senare
     $scope.getEventSize = function () {
+
         return 50;
     };
+
+    dataService.getCampaign().then(function(response){
+        
+        $scope.campaign=response.data;
+    });
 });
-
-
 
 /*
 app.controller("WebApiCtrl", function($scope, $http){
@@ -88,4 +104,4 @@ app.controller("WebApiCtrl", function($scope, $http){
         return 50;
     };
 });
-    */
+*/

@@ -41,7 +41,7 @@
 <!-- FÖr att få evalslider att funka  -->
 <div ng-controller="WebApiCtrl">
     <h2>ArrowHead stats:</h2>
-    {{result}}
+    {{campaign}}
     <h2>Campaign Status</h2>
     <table style="width:75%">
         <tr>
@@ -55,42 +55,42 @@
             <th>Introduction Order:</th>
         </tr>
         <tr>
-            <td>{{result.time}}</td>
+            <td>{{campaign.time}}</td>
 
-            <td>{{result.error_code}}</td>
+            <td>{{campaign.error_code}}</td>
             <!--Season-->
             <td>
-                <li ng-repeat="stat in result.campaign_status">
+                <li ng-repeat="stat in campaign.campaign_status">
                     {{stat.season}}
                 </li>
             </td>
             <!--Points-->
             <td>
-                <li ng-repeat="stat in result.campaign_status">
+                <li ng-repeat="stat in campaign.campaign_status">
                     {{stat.points}}
                 </li>
             </td>
             <!--Points Taken-->
             <td>
-                <li ng-repeat="stat in result.campaign_status">
+                <li ng-repeat="stat in campaign.campaign_status">
                     {{stat.points_taken}}
                 </li>
             </td>
             <!--Max Points-->
             <td>
-                <li ng-repeat="stat in result.campaign_status">
+                <li ng-repeat="stat in campaign.campaign_status">
                     {{stat.points_max}}
                 </li>
             </td>
             <!--Status-->
             <td>
-                <li ng-repeat="stat in result.campaign_status">
+                <li ng-repeat="stat in campaign.campaign_status">
                     {{stat.status}}
                 </li>
             </td>
             <!--Introduction Order-->
             <td>
-                <li ng-repeat="stat in result.campaign_status">
+                <li ng-repeat="stat in campaign.campaign_status">
                     {{stat.introduction_order}}
                 </li>
             </td>
@@ -113,39 +113,39 @@
         </tr>
         <tr>
             <td>
-                {{result.defend_event.season}}
+                {{campaign.defend_event.season}}
             </td>
 
             <td>
-                {{result.defend_event.event_id}}
+                {{campaign.defend_event.event_id}}
             </td>
             <!--Season-->
             <td>
-                {{result.defend_event.start_time}}
+                {{campaign.defend_event.start_time}}
             </td>
             <!--end time-->
             <td>
-                {{result.defend_event.end_time}}
+                {{campaign.defend_event.end_time}}
             </td>
             <!--region-->
             <td>
-                {{result.defend_event.region}}
+                {{campaign.defend_event.region}}
             </td>
             <!--enemy-->
             <td>
-                {{result.defend_event.enemy}}
+                {{campaign.defend_event.enemy}}
             </td>
             <!--max points-->
             <td>
-                {{result.defend_event.points_max}}
+                {{campaign.defend_event.points_max}}
             </td>
             <!--Points-->
             <td>
-                {{result.defend_event.points}}
+                {{campaign.defend_event.points}}
             </td>
             <!--status-->
             <td>
-                {{result.defend_event.status}}
+                {{campaign.defend_event.status}}
             </td>
         </tr>
     </table>
@@ -167,52 +167,52 @@
         </tr>
         <tr>
             <td>
-                <li ng-repeat="attack in result.attack_events">
+                <li ng-repeat="attack in campaign.attack_events">
                     {{attack.season}}
                 </li>
             </td>
             <td>
-                <li ng-repeat="attack in result.attack_events">
+                <li ng-repeat="attack in campaign.attack_events">
                     {{attack.event_id}}
                 </li>
             </td>
             <td>
-                <li ng-repeat="attack in result.attack_events">
+                <li ng-repeat="attack in campaign.attack_events">
                     {{attack.start_time}}
                 </li>
             </td>
             <td>
-                <li ng-repeat="attack in result.attack_events">
+                <li ng-repeat="attack in campaign.attack_events">
                     {{attack.end_time}}
                 </li>
             </td>
             <td>
-                <li ng-repeat="attack in result.attack_events">
+                <li ng-repeat="attack in campaign.attack_events">
                     {{attack.enemy}}
                 </li>
             </td>
             <td>
-                <li ng-repeat="attack in result.attack_events">
+                <li ng-repeat="attack in campaign.attack_events">
                     {{attack.points_max}}
                 </li>
             </td>
             <td>
-                <li ng-repeat="attack in result.attack_events">
+                <li ng-repeat="attack in campaign.attack_events">
                     {{attack.points}}
                 </li>
             </td>
             <td>
-                <li ng-repeat="attack in result.attack_events">
+                <li ng-repeat="attack in campaign.attack_events">
                     {{attack.status}}
                 </li>
             </td>
             <td>
-                <li ng-repeat="attack in result.attack_events">
+                <li ng-repeat="attack in campaign.attack_events">
                     {{attack.players_at_start}}
                 </li>
             </td>
             <td>
-                <li ng-repeat="attack in result.attack_events">
+                <li ng-repeat="attack in campaign.attack_events">
                     {{attack.max_event_id}}
                 </li>
             </td>
@@ -238,59 +238,59 @@
 
         <tr>
             <td>
-                <li ng-repeat="stat in result.statistics">
+                <li ng-repeat="stat in campaign.statistics">
                     {{stat.season}}
                 </li>
             </td>
             <td>
-                <li ng-repeat="stat in result.statistics">
+                <li ng-repeat="stat in campaign.statistics">
                     {{stat.season_duration}}
                 </li>
             </td>
             <td>
-                <li ng-repeat="stat in result.statistics">
+                <li ng-repeat="stat in campaign.statistics">
                     {{stat.enemy}}
                 </li>
             </td>
             <td>
-                <li ng-repeat="stat in result.statistics">
+                <li ng-repeat="stat in campaign.statistics">
                     {{stat.players}}
                 </li>
             </td>
             <td>
-                <li ng-repeat="stat in result.statistics">
+                <li ng-repeat="stat in campaign.statistics">
                     {{stat.total_unique_players}}
                 </li>
             </td>
             <td>
-                <li ng-repeat="stat in result.statistics">
+                <li ng-repeat="stat in campaign.statistics">
                     {{stat.missions}}
                 </li>
             </td>
             <td>
-                <li ng-repeat="stat in result.statistics">
+                <li ng-repeat="stat in campaign.statistics">
                     {{stat.successful_missions}}
                 </li>
             </td>
 
             <td>
-                <li ng-repeat="stat in result.statistics">
+                <li ng-repeat="stat in campaign.statistics">
                     {{stat.total_mission_difficulty}}
                 </li>
             </td>
             <td>
-                <li ng-repeat="stat in result.statistics">
+                <li ng-repeat="stat in campaign.statistics">
                     {{stat.completed_planets}}
                 </li>
             </td>
 
             <td>
-                <li ng-repeat="stat in result.statistics">
+                <li ng-repeat="stat in campaign.statistics">
                     {{stat.defend_events}}
                 </li>
             </td>
             <td>
-                <li ng-repeat="stat in result.statistics">
+                <li ng-repeat="stat in campaign.statistics">
                     {{stat.successful_defend_events}}
                 </li>
             </td>
@@ -309,37 +309,37 @@
                 </tr>
 
                 <td>
-                    <li ng-repeat="stat in result.statistics">
+                    <li ng-repeat="stat in campaign.statistics">
                         {{stat.attack_events}}
                     </li>
                 </td>
                 <td>
-                    <li ng-repeat="stat in result.statistics">
+                    <li ng-repeat="stat in campaign.statistics">
                         {{stat.successful_attack_events}}
                     </li>
                 </td>
                 <td>
-                    <li ng-repeat="stat in result.statistics">
+                    <li ng-repeat="stat in campaign.statistics">
                         {{stat.deaths}}
                     </li>
                 </td>
                 <td>
-                    <li ng-repeat="stat in result.statistics">
+                    <li ng-repeat="stat in campaign.statistics">
                         {{stat.kills}}
                     </li>
                 </td>
                 <td>
-                    <li ng-repeat="stat in result.statistics">
+                    <li ng-repeat="stat in campaign.statistics">
                         {{stat.accidentals}}
                     </li>
                 </td>
                 <td>
-                    <li ng-repeat="stat in result.statistics">
+                    <li ng-repeat="stat in campaign.statistics">
                         {{stat.shots}}
                     </li>
                 </td>
                 <td>
-                    <li ng-repeat="stat in result.statistics">
+                    <li ng-repeat="stat in campaign.statistics">
                         {{stat.hits}}
                     </li>
                 </td>
