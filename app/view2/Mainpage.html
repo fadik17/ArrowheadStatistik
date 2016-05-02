@@ -16,7 +16,7 @@
 <div ng-controller="WebApiCtrl">
     <h1 style="color: rgba(0, 0, 0, 1)">View example</h1><br/>
     <div id="slider" style="background: rgba(209, 255, 181, 1); height:500px; width: 98%;">
-        {{data}}
+        {{lol}}
     </div>
     <br/><br/>
     <form style="text-align:center">
@@ -28,11 +28,11 @@
         <input style="width:500px;" type="range" id="rating" min="1" max="{{getEventSize()}}" value="1" step="1"
                onchange="evalSlider()" oninput="evalSlider()"/>
 
-        <br/><select id="enemyType" name="Faction" data-value="bugs" onchange="saveEnemyType()">
-        <option value="bugs">Bugs</option>
-        <option value="the_illuminate">Illuminate</option>
-        <option value="cyborgs">Cyborgs</option>
-    </select>
+        <br /><select id="enemyType" name="Faction" data-value="bugs" onchange="saveEnemyType()">
+            <option value="bugs">Bugs</option>
+            <option value="the_illuminate">Illuminate</option>
+            <option value="cyborgs">Cyborgs</option>
+        </select>
     </form>
     <br/>
 </div>
