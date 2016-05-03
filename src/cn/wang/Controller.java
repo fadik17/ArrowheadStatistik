@@ -1,12 +1,12 @@
 package cn.wang;
 
 import java.util.Date;
+import java.util.List;
 import java.util.TimerTask;
 
 public class Controller {
 	
 	private Library model;
-	
 	public Controller () {
 		
 	}
@@ -16,14 +16,15 @@ public class Controller {
 		this.model = model;
 	}
 	
-	
-	// We can put codes below in a timer later ... See details in class Timer
-	
-	// For Teddy & Carlos' sake: FrontEnd
-		public void searchDatabase () {
-			
-		}
+	    // For Teddy & Carlos' sake: FrontEnd
+	@SuppressWarnings("unchecked")
+	public void searchDatabase () {
+		Object object = model.search(CalculationSearchType.SNAPSHOT, "2016-05-03 15:02:19");
+		for(int i = 0; i < ((List<Calculation>) object).size(); i ++)
+			System.out.println(((List<Calculation>) object).get(i).toString());
 		
+	}
+
 		class updateDatabasePeriodically extends TimerTask  {
 			
 			//TimerTaskSnapshot snapshot = new TimerTaskSnapshot();
@@ -41,6 +42,7 @@ public class Controller {
 			updateDefendEvent(handler);
 			updateAttackEvent(handler);
 			updateStatistics(handler);
+			updateCalculation(handler);
 			
 		}
 
@@ -136,5 +138,45 @@ public class Controller {
 			}
 			System.out.println(cnt + " items ---> Statistics, ahDB!");
 		}
+		
+		public void updateCalculation (JsonHandler handler) {
+			int cnt = 0;
+			for (int i = 0; i < handler.getSeasonOfStatistics().size(); i ++) {
+				long time = handler.getTime();
+				long season = handler.getSeasonOfStatistics().get(i);
+				long enemy = handler.getEnemyOfStatistics().get(i);
+				long missions = handler.getMissionsOfStatistics().get(i);
+				long successful_missions = handler.getSuccessfulMissionsOfStatistics().get(i);
+				long defend_events = handler.getDefendEventsOfStatistics().get(i);
+				long successful_defend_events = handler.getSuccessfulDefendEventsOfStatistics().get(i);
+				long attack_events = handler.getAttackEventsOfStatistics().get(i);
+				long successful_attack_events = handler.getSuccessfulAttackEventsOfStatistics().get(i);
+				long deaths = handler.getDeathsOfStatistics().get(i);
+				long kills = handler.getKillsOfStatistics().get(i);
+				long accidentals = handler.getAccidentalsOfStatistics().get(i);
+				long shots = handler.getShotsOfStatistics().get(i);
+				long hits = handler.getHitsOfStatistics().get(i);
+				
+				CalculateFieldsOfCalculation calculator = new CalculateFieldsOfCalculation(time, shots, hits, kills,
+						deaths, successful_missions, missions,
+						defend_events, successful_defend_events,
+						attack_events, successful_attack_events, accidentals);
+				String snapshot = calculator.calculateSnapshot(time);
+				long accuracy = calculator.calculateAccuracy();
+				long accidental_kills = calculator.calculateAccidentalKills();
+				long mission_percentage = calculator.calculateSuccessfulMissionPercentage();
+				long defend_percentage = calculator.successfulDefendPercentage();
+				long attack_percentage = calculator.successfulAttackPercentage();
+				long kill_death_rate = calculator.calculateKillDeathRate();
+				
+				
+				
+				model.addNewCalculation(season, snapshot, accuracy, accidental_kills, mission_percentage, 
+						defend_percentage,  attack_percentage, kill_death_rate,  enemy);
+				cnt ++;
+			}
+			System.out.println(cnt + " items ---> Calculation, ahDB!");
+		}
+		
 
 }

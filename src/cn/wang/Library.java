@@ -1,5 +1,7 @@
 package cn.wang;
 
+import java.util.List;
+
 
 /**
  * Created by wang on 22/04/16.
@@ -8,6 +10,7 @@ package cn.wang;
 public class Library {
 
     private DatabaseDAO databaseDAO;
+    private List<Calculation> list;
 
     public Library(DatabaseDAO databaseDAO) {
 
@@ -184,8 +187,66 @@ public class Library {
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
-
-
     }
+    
+    public void addNewCalculation(long season, String snapshot, long accuracy, long accidental_kills, 
+    		long mission_percentage, long defend_percentage, long attack_percentage,
+			long kill_death_rate, long enemy) {
+
+        Thread thread = new Thread() {
+
+            public void run() {
+            	
+            	Calculation calculation = new Calculation();
+            	calculation.setSeason(season);
+            	calculation.setSnapshot(snapshot);
+            	calculation.setAccuracy(accuracy);
+            	calculation.setAccidental_kills(accidental_kills);
+            	calculation.setMission_percentage(mission_percentage);
+            	calculation.setDefend_percentage(defend_percentage);
+            	calculation.setAttack_percentage(attack_percentage);
+            	calculation.setKill_death_rate(kill_death_rate);
+            	calculation.setEnemy(enemy);
+            	
+
+                databaseDAO.insertCalculation(calculation);
+
+            }
+
+        };
+
+        thread.start();
+        try {
+            thread.join();
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+    }
+    
+public List<Calculation> search(CalculationSearchType searchType, String value){
+		
+		Thread t = new Thread(){
+		
+		
+			public void run(){
+				 list = databaseDAO.searchCalculation(searchType, value);
+				 
+			}
+		};
+		
+		t.start();
+		try {
+			t.join();
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return list;
+		
+		
+		
+		
+	}
 
 }

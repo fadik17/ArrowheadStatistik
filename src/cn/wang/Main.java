@@ -48,8 +48,9 @@ public class Main {
 		JsonHandler handler = new JsonHandler(jsonArray);
 		Controller controller = buildController();
 		//controller.updateDatabase(handler);
+		controller.searchDatabase();
 		Timer timer = new Timer(); ;
-		timer.schedule(new java.util.TimerTask() { public void run() {controller.updateDatabase(handler);} }, 0, 1000); 
+		timer.schedule(new java.util.TimerTask() { public void run() {controller.updateDatabase(handler);} }, 1, 5*60*1000); 
 			
 		
     }

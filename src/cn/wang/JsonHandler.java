@@ -772,6 +772,10 @@ public ArrayList<Long> getHitsOfStatistics() {
 		return hitsValues;
 		
 	}
+
+//Values of Calculation
+
+
 }
 
 
