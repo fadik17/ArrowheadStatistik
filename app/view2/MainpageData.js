@@ -1,7 +1,8 @@
 var sliderVal=1;
-var enemyType="bugs";
-var currentSeason = 2;
-
+var enemyType="general";
+var choosedSeason=1;
+var currentSeason=1;
+var flagg=false;
 
 function evalSlider2() {
 
@@ -14,6 +15,23 @@ function saveEnemyType(){
     enemyType=document.getElementById('enemyType').value;
 }
 
+
+function createSelectOptions(){
+ //  document.write("in test: "+currentSeason);
+    var x = document.getElementById('seasons');
+    if(flagg!=true) {
+        for (i = 1; i <= currentSeason; i++) {
+            var option = document.createElement("option");
+            option.text = i;
+            x.add(option);
+        }
+        flagg=true;
+    }
+}
+
+function saveSeason(){
+    choosedSeason=document.getElementById('seasons').value;
+}
 
 var app = angular.module('app', [], function($httpProvider){
 
@@ -30,9 +48,9 @@ app.service('dataService', function($http) {
         return $http({
             method: 'GET',
             url: "http://localhost:8080/GetSnapshots",
-            params: {"season": sliderVal, "start": sliderVal, "end": sliderVal}
+            params: {"season": choosedSeason, "start": sliderVal, "end": sliderVal}
         });
-    }
+    };
 
     this.getCampaign=function () {
 
@@ -49,7 +67,6 @@ app.controller("WebApiCtrl", function($scope, dataService) {
     $scope.data = null;
 
     dataService.getData().then(function (dataResponse) {
-
         $scope.data = dataResponse;
     });
 
@@ -59,54 +76,30 @@ app.controller("WebApiCtrl", function($scope, dataService) {
         });
     };
 
+    $scope.camp=function () {
+        dataService.getData().then(function (dataResponse) {
+            $scope.data = dataResponse;
+        });
+    };
+    $scope.getSeason=function () {
+        dataService.getCampaign().then(function (dataResponse) {
+            $scope.trubble = dataResponse;
+            currentSeason = dataResponse.data.campaign_status[1].season;
+            createSelectOptions();
+        });
+    };
+    
     $scope.defaultSlide = function () {
-
-        document.getElementById("sliderValue").value = "1";
+        return 1;
     };
 
     // möjliggöra dynamisk ändring --> kommer att användas senare
     $scope.getEventSize = function () {
-        return currentSeason;
+        return 50;
     };
 
     dataService.getCampaign().then(function(response){
         $scope.campaign=response.data;
-        currentSeason = response.data.campaign_status.season;
-    });
-});
-
-/*
-app.controller("WebApiCtrl", function($scope, $http){
-
-    $http.get("http://localhost:8080/post").then(function(response) {
-        console.log(response);
-        $scope.result = response.data;
-    }, function(response) {
-
-        //fail case
-    //    document.write("fail");
-        console.log(response);
-        $scope.result = response.data;
     });
 
-     $scope.lol=function(){
-        $http.get("http://localhost:8080/c=3", {
-            params: {"season": 14, "start": 20, "end": 20}
-        }).success(function (snapResponse) {
-            console.log("Success", snapResponse);
-            $scope.snapResult = snapResponse;
-        }).error(function () {
-            console.log("error");
-        });
-    };
-
-    $scope.defaultSlide = function () {
-        document.getElementById("sliderValue").value = "1";
-    };
-
-    // möjliggöra dynamisk ändring --> kommer att användas senare
-    $scope.getEventSize=function () {
-        return 50;
-    };
 });
-*/

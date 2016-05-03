@@ -4,6 +4,7 @@
 <head>
     <a href="https://api.helldiversgame.com/0.3/">Länken till API</a>
     <meta charset="UTF-8">
+   <!-- <meta http-equiv="refresh" content="30"/> -->
     <title>stats</title>
     <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.3.14/angular.min.js"></script>
     <script src="MainpageData.js"></script>
@@ -23,15 +24,19 @@
         <p style="text-align: center;">
             <label>Day: </label>
             <output id="sliderValue"></output>
-
         </p>
         <!-- change var name  -->
-        <input style="width:500px;" type="range" id="rating" min="1" max="{{getEventSize()}}" value="1" step="1"
-               onchange="angular.element(this).scope().evalSlider()" oninput="evalSlider2()"/>
+        <input style="width:500px;" type="range" id="rating" min="1" max="{{getEventSize()}}" value="{{defaultSlide()}}" step="1"
+               onchange="angular.element(this).scope().evalSlider();angular.element(this).scope().camp();" oninput="evalSlider2()"/>
         <br /><select id="enemyType" name="Faction" data-value="bugs" onchange="saveEnemyType()">
+            <option value="general">general</option>
             <option value="bugs">Bugs</option>
             <option value="the_illuminate">Illuminate</option>
             <option value="cyborgs">Cyborgs</option>
+        </select>
+
+        <select id="seasons"data-value="bugs" onmouseover="angular.element(this).scope().getSeason();" onchange="saveSeason();angular.element(this).scope().camp();">
+            <option value="">Season</option>
         </select>
     </form>
     <br/>
