@@ -28,15 +28,11 @@
         <!-- change var name  -->
         <input style="width:500px;" type="range" id="rating" min="1" max="{{getEventSize()}}" value="{{defaultSlide()}}" step="1"
                onchange="angular.element(this).scope().evalSlider();angular.element(this).scope().camp();" oninput="evalSlider2()"/>
-        <br /><br/>
-        <br/>
-
-        <!Sätter in Select  och innehåll från delen som Teddy & Carlos jobbade med, det är det enda som ändras i denna fil -->
-        <select id="enemyType" name="Faction" data-value="bugs" onchange="angular.element(this).scope().selectStatisticsInSeason()">
-            <option value="global_stats">GlobalStats</option>
-            <option value="0">Bugs</option>
-            <option value="1">Illuminate</option>
-            <option value="2">Cyborgs</option>
+        <br /><select id="enemyType" name="Faction" data-value="bugs" onchange="saveEnemyType()">
+            <option value="general">general</option>
+            <option value="bugs">Bugs</option>
+            <option value="the_illuminate">Illuminate</option>
+            <option value="cyborgs">Cyborgs</option>
         </select>
 
         <select id="seasons"data-value="bugs" onmouseover="angular.element(this).scope().getSeason();" onchange="saveSeason();angular.element(this).scope().camp();">
