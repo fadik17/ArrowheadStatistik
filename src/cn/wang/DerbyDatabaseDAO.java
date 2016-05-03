@@ -1,8 +1,11 @@
 package cn.wang;
 
 import org.apache.commons.dbutils.QueryRunner;
+import org.apache.commons.dbutils.handlers.BeanListHandler;
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by wang on 22/04/16.
@@ -11,7 +14,7 @@ public class DerbyDatabaseDAO implements DatabaseDAO {
 
     private Connection connection;
     private QueryRunner dbAccess = new QueryRunner();
-    //private static final List<> EMPTY = new ArrayList<>();
+    private static final List<Calculation> EMPTY = new ArrayList<>();
 
     private String user = "me"; String passwd = "me";
     private String database = "ahDB";
@@ -107,6 +110,29 @@ public class DerbyDatabaseDAO implements DatabaseDAO {
     }
 
     @Override
+    public long insertCalculation(Calculation calculation) {
+        try{
+            long id = dbAccess.update(connection, "insert into Calculation(season, snapshot, accuracy, accidental_kills, "
+            		+ "successful_mission_percentage, successful_defend_percentage,  successful_attack_percentage, kill_death_rate, "
+            		+ "enemy) values (?,?,?,?,?,?,?,?,?)",
+            		
+            		calculation.getSeason(), calculation.getSnapshot(),
+            		calculation.getAccuracy(), calculation.getAccidental_kills(),
+            		calculation.getMission_percentage(), calculation.getDefend_percentage(),
+            		calculation.getAttack_percentage(), calculation.getKill_death_rate(),
+            		calculation.getEnemy());
+            		
+            
+                   
+            return id;
+
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+
+        return -1L;	// Return -1 for error;
+    }
+    @Override
     public void connect() throws Exception {
 
         try {
@@ -126,4 +152,73 @@ public class DerbyDatabaseDAO implements DatabaseDAO {
         connection.close();
 
     }
+
+	@Override
+	public List<Calculation> searchCalculation(CalculationSearchType searchType, Object value) {
+		
+		        // Generic methods
+				
+				String whereClause = "";
+				String valueClause = "";
+				
+				switch(searchType){
+				
+				case SNAPSHOT:
+					whereClause = "snapshot LIKE ?";
+					valueClause = value.toString();
+					break;
+				case SEASON:
+					whereClause = "season = ?";
+					valueClause = "%" + value.toString() + "%";
+					break;
+				case ACCURACY:
+					whereClause = "accuracy = ?";
+					valueClause = value.toString();
+					break;
+				case ACCIDENTAL_KILLS:
+					whereClause = "accidental_kills LIKE ?";
+					valueClause = "%"+ value.toString() + "%";
+					break;
+				case SUCCESSFUL_MISSION_PERCENTAGE:
+					whereClause = "successful_mission_percentage LIKE ?";
+					valueClause = "%" + value.toString() + "%";
+					break;
+				case SUCCESSFUL_DEFEND_PERCENTAGE:
+					whereClause = "successful_defend_percentage LIKE ?";
+					valueClause = "%" + value.toString() + "%";
+					break;
+				case SUCCESSFUL_ATTACK_PERCENTAGE:
+					whereClause = "successful_attack_percentage LIKE ?";
+					valueClause = "%" + value.toString() + "%";
+					break;
+				case KILL_DEATH_RATE:
+					whereClause = "kill_death_rate LIKE ?";
+					valueClause = "%" + value.toString() + "%";
+					break;
+				case ENEMY:
+					whereClause = "enemy LIKE ?";
+					valueClause = "%" + value.toString() + "%";
+					break;
+				default:
+					System.out.println("Unknow search type");
+					break;
+				
+				}
+				
+				try{
+					/**
+					 * It is a MUST to add " " after the last "and" i mySQL syntax!!!!
+					 */
+					return dbAccess.query(connection, "SELECT snapshot, season, accuracy, accidental_kills,"
+							+ "successful_mission_percentage, successful_defend_percentage, "
+							+ "successful_attack_percentage,"
+							+ "kill_death_rate, enemy from Calculation WHERE " 
+							+  whereClause, new BeanListHandler<Calculation>(Calculation.class), valueClause);
+					
+				}catch(Exception e){
+					e.printStackTrace();
+				}
+				return EMPTY;
+		
+	}
 }
