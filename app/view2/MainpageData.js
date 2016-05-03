@@ -2,7 +2,7 @@ var sliderVal=1;
 var enemyType="general";
 var choosedSeason=1;
 var currentSeason=1;
-var flagg=false;
+var flagg=false; //flagg..
 
 function evalSlider2() {
 
