@@ -81,18 +81,18 @@ app.controller("WebApiCtrl", function($scope, dataService) {
 
     $scope.data = null;
 
-    dataService.getData(sliderVal, sliderVal, sliderVal).then(function (dataResponse) {
+    dataService.getData(choosedSeason, sliderVal, sliderVal).then(function (dataResponse) {
         $scope.data = dataResponse;
     });
 
     $scope.evalSlider = function () {
-        dataService.getData(sliderVal, sliderVal, sliderVal).then(function (dataResponse) {
+        dataService.getData(choosedSeason, sliderVal, sliderVal).then(function (dataResponse) {
             $scope.data = dataResponse;
         });
     };
 
     $scope.camp=function () {
-        dataService.getData(sliderVal, sliderVal, sliderVal).then(function (dataResponse) {
+        dataService.getData(choosedSeason, sliderVal, sliderVal).then(function (dataResponse) {
             $scope.data = dataResponse;
         });
     };
@@ -128,7 +128,7 @@ app.controller("WebApiCtrl", function($scope, dataService) {
     $scope.selectStatisticsInSeason = function (){
         var def_events = [];
         enemyType=document.getElementById('enemyType').value;
-        dataService.getData(currentSeason, 2, 2).then(function(response)
+        dataService.getData(choosedSeason, sliderVal, sliderVal).then(function(response)
         {
             if(enemyType == "global_stats")
             {
