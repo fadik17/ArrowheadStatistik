@@ -2,14 +2,15 @@ var sliderVal=1;
 var enemyType="general";
 var choosedSeason=1;
 var currentSeason=1;
-var flagg=false; //flagg..
+var flagg=false;
+
 
 /**
  * enemyType lagt till för funktionen som dropdown menyn för fiendetyp använder.
  * Slås ihop med Dani, Alican och Fadis uppladdning, denna kommentar är för debug
  * ifall det inte fungerar efter ihopslagning.
  */
-var enemyType="bugs";
+
 
 function evalSlider2() {
 
