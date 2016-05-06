@@ -20,14 +20,20 @@ function evalSlider2() {
 
 
 function createSelectOptions() {
+
     //  document.write("in test: "+currentSeason);
     var x = document.getElementById('seasons');
+    var i;
+
     if (flagg != true) {
+
         for (i = 1; i <= currentSeason; i++) {
+
             var option = document.createElement("option");
             option.text = i;
             x.add(option);
         }
+
         flagg = true;
     }
 }
