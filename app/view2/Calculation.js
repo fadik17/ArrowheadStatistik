@@ -16,7 +16,7 @@ var jsObject;
 
 function run() {
 
-    getJSONObject(jsObject);
+    getJSONObject();
     accuracyCalc();
     kdRatioCalc();
     missionSuccessCalc();
@@ -93,7 +93,7 @@ function attackSuccessCalc () {
     }
 }
 
-function accidentialCalc (accidential_kills) {
+function accidentialCalc () {
 
-    accidentalKills = accidential_kills;
+    accidentalKills = (accidentals / kills) * 100;
 }
