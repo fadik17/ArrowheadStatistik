@@ -89,6 +89,7 @@ app.controller("WebApiCtrl", function ($scope, dataService) {
     });
 
     $scope.evalSlider = function () {
+        
         dataService.getData(choosedSeason, sliderVal, sliderVal).then(function (dataResponse) {
 
             $scope.data = dataResponse;
@@ -96,6 +97,7 @@ app.controller("WebApiCtrl", function ($scope, dataService) {
     };
 
     $scope.camp = function () {
+        
         dataService.getData(choosedSeason, sliderVal, sliderVal).then(function (dataResponse) {
 
             $scope.data = dataResponse;
