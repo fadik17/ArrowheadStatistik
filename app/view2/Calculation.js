@@ -12,8 +12,30 @@ var shots, hits; //accuracy
 var players, total_unique_players;
 var total_mission_difficulty, completed_planets;
 var accuracy, kdRatio, missionsPercentage, defendPercentage, attackPercentage, accidentalKills;
+var jsObject;
 
-function Accuracy() {
+function run() {
+
+    getJSONObject(jsObject);
+    accuracyCalc();
+    kdRatioCalc();
+    missionSuccessCalc();
+    defendSuccessCalc();
+    attackSuccessCalc();
+    accidentialCalc();
+}
+
+function getJSONObject() {
+
+    enemy = jsObject.get("enemy");
+    season = jsObject.get("season");
+    players = jsObject.get("players");
+    total_unique_players = jsObject.get("total_unique_players");
+    total_mission_difficulty = jsObject.get("total_mission_difficulty");
+    completed_planets = jsObject.get("completed_planets");
+}
+
+function accuracyCalc() {
 
     if (hits == 0 || shots == 0) {
 
@@ -24,7 +46,7 @@ function Accuracy() {
     }
 }
 
-function kdRatio() {
+function kdRatioCalc() {
 
     if (kills == 0 || deaths == 0){
 
@@ -35,7 +57,7 @@ function kdRatio() {
     }
 }
 
-function missionSuccess() {
+function missionSuccessCalc () {
 
     if (successful_missions == 0 || missions == 0) {
 
@@ -47,7 +69,7 @@ function missionSuccess() {
     }
 }
 
-function defendSuccess (){
+function defendSuccessCalc (){
 
     if (successful_defend_events == 0 || defend_events == 0){
 
@@ -59,7 +81,7 @@ function defendSuccess (){
     }
 }
 
-function attackSuccess() {
+function attackSuccessCalc () {
 
     if (successful_attack_events == 0 || attack_events == 0) {
 
@@ -71,7 +93,7 @@ function attackSuccess() {
     }
 }
 
-function accidentials() {
+function accidentialCalc (accidential_kills) {
 
-
+    accidentalKills = accidential_kills;
 }
