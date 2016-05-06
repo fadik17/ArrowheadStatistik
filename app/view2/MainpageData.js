@@ -1,8 +1,8 @@
-var sliderVal=1;
-var enemyType="general";
-var choosedSeason=1;
-var currentSeason=1;
-var flagg=false;
+var sliderVal = 1;
+var enemyType = "general";
+var choosedSeason = 1;
+var currentSeason = 1;
+var flagg = false;
 
 
 /**
@@ -18,35 +18,30 @@ function evalSlider2() {
     document.getElementById('sliderValue').innerHTML = sliderVal;
 }
 
-function saveEnemyType(){
 
-    enemyType=document.getElementById('enemyType').value;
-}
-
-
-function createSelectOptions(){
- //  document.write("in test: "+currentSeason);
+function createSelectOptions() {
+    //  document.write("in test: "+currentSeason);
     var x = document.getElementById('seasons');
-    if(flagg!=true) {
+    if (flagg != true) {
         for (i = 1; i <= currentSeason; i++) {
             var option = document.createElement("option");
             option.text = i;
             x.add(option);
         }
-        flagg=true;
+        flagg = true;
     }
 }
 
-function saveSeason(){
-    choosedSeason=document.getElementById('seasons').value;
+function saveSeason() {
+
+    choosedSeason = document.getElementById('seasons').value;
 }
 
-var app = angular.module('app', [], function($httpProvider){
+var app = angular.module('app', [], function ($httpProvider) {
 
     $httpProvider.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded';
     $httpProvider.defaults.headers.post['Access-Control-Allow-Origin'] = '*';
 });
-
 
 
 /**
@@ -55,9 +50,9 @@ var app = angular.module('app', [], function($httpProvider){
  *  lagt till för befintliga anrop till dataService. Dessa anrop till service bör ses till om det
  *  int fungerar som det bör.
  */
-app.service('dataService', function($http) {
-    
-    this.getData = function(season, start, end) {
+app.service('dataService', function ($http) {
+
+    this.getData = function (season, start, end) {
 
         // $http() returns a $promise that we can add handlers with .then()
         return $http({
@@ -68,55 +63,63 @@ app.service('dataService', function($http) {
         });
     };
 
-    this.getCampaign=function () {
+    this.getCampaign = function () {
 
         return $http({
-            method:'GET',
-            url:"http://localhost:8080/GetCampaignStatus"
+            method: 'GET',
+            url: "http://localhost:8080/GetCampaignStatus"
         });
     };
 });
 
 
-app.controller("WebApiCtrl", function($scope, dataService) {
+app.controller("WebApiCtrl", function ($scope, dataService) {
 
     $scope.data = null;
 
     dataService.getData(choosedSeason, sliderVal, sliderVal).then(function (dataResponse) {
+
         $scope.data = dataResponse;
     });
 
     $scope.evalSlider = function () {
         dataService.getData(choosedSeason, sliderVal, sliderVal).then(function (dataResponse) {
+
             $scope.data = dataResponse;
         });
     };
 
-    $scope.camp=function () {
+    $scope.camp = function () {
         dataService.getData(choosedSeason, sliderVal, sliderVal).then(function (dataResponse) {
+
             $scope.data = dataResponse;
         });
     };
-    $scope.getSeason=function () {
+    $scope.getSeason = function () {
+
         dataService.getCampaign().then(function (dataResponse) {
+
             $scope.trubble = dataResponse;
             currentSeason = dataResponse.data.campaign_status[1].season;
             createSelectOptions();
         });
     };
-    
+
     $scope.defaultSlide = function () {
+
         return 1;
     };
 
     // möjliggöra dynamisk ändring --> kommer att användas senare
     $scope.getEventSize = function () {
+
         return 50;
     };
 
     /**fixed currentsSeason in getCampaign function. It gets the currentSeason**/
-    dataService.getCampaign().then(function(response){
-        $scope.campaign=response.data;
+    dataService.getCampaign().then(function (response) {
+
+        $scope.campaign = response.data;
         currentSeason = response.data.campaign_status[0].season;
     });
 
@@ -126,31 +129,34 @@ app.controller("WebApiCtrl", function($scope, dataService) {
     /**
      saveEnemyType - current start + end value should be dynamic
      **/
-    $scope.selectStatisticsInSeason = function (){
+    $scope.selectStatisticsInSeason = function () {
+
         var def_events = [];
-        enemyType=document.getElementById('enemyType').value;
-        dataService.getData(choosedSeason, sliderVal, sliderVal).then(function(response)
-        {
-            if(enemyType == "global_stats")
-            {
+        enemyType = document.getElementById('enemyType').value;
+
+        dataService.getData(choosedSeason, sliderVal, sliderVal).then(function (response) {
+
+            if (enemyType == "global_stats") {
+
                 $scope.data = response.data;
             }
-            else
-            {
+            else {
+
                 var i;
-                if(response.data.defend_events != null)
-                {
-                    for(i =0;i<response.data.defend_events.length;i++)
-                    {
-                        if(response.data.defend_events[i].enemy == enemyType)
-                        {
+
+                if (response.data.defend_events != null) {
+
+                    for (i = 0; i < response.data.defend_events.length; i++) {
+
+                        if (response.data.defend_events[i].enemy == enemyType) {
+
                             def_events.push(response.data.defend_events[i]);
                         }
                     }
+
                     $scope.data = def_events;
                 }
             }
         });
     };
-
 });
