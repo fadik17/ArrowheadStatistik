@@ -1,7 +1,6 @@
 var sliderVal=1;
 var enemyType="bugs";
-var currentSeason = 2;
-
+var currentSeason = 14;
 
 function evalSlider2() {
 
@@ -9,28 +8,21 @@ function evalSlider2() {
     document.getElementById('sliderValue').innerHTML = sliderVal;
 }
 
-function saveEnemyType(){
-
-    enemyType=document.getElementById('enemyType').value;
-}
-
-
 var app = angular.module('app', [], function($httpProvider){
 
     $httpProvider.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded';
     $httpProvider.defaults.headers.post['Access-Control-Allow-Origin'] = '*';
 });
 
-
 app.service('dataService', function($http) {
     
-    this.getData = function() {
+    this.getData = function(season, start, end) {
 
         // $http() returns a $promise that we can add handlers with .then()
         return $http({
             method: 'GET',
             url: "http://localhost:8080/GetSnapshots",
-            params: {"season": sliderVal, "start": sliderVal, "end": sliderVal}
+            params: {"season": season, "start": start, "end": end}
         });
     }
 
@@ -43,18 +35,18 @@ app.service('dataService', function($http) {
     };
 });
 
-
 app.controller("WebApiCtrl", function($scope, dataService) {
 
     $scope.data = null;
 
-    dataService.getData().then(function (dataResponse) {
+
+    dataService.getData(sliderVal, sliderVal, sliderVal).then(function (dataResponse) {
 
         $scope.data = dataResponse;
     });
 
     $scope.evalSlider = function () {
-        dataService.getData().then(function (dataResponse) {
+        dataService.getData(sliderVal, sliderVal, sliderVal).then(function (dataResponse) {
             $scope.data = dataResponse;
         });
     };
@@ -69,44 +61,38 @@ app.controller("WebApiCtrl", function($scope, dataService) {
         return currentSeason;
     };
 
+    /**fixed currentsSeason in getCampaign function. It gets the currentSeason**/
     dataService.getCampaign().then(function(response){
         $scope.campaign=response.data;
-        currentSeason = response.data.campaign_status.season;
+        currentSeason = response.data.campaign_status[0].season;
     });
-});
-
-/*
-app.controller("WebApiCtrl", function($scope, $http){
-
-    $http.get("http://localhost:8080/post").then(function(response) {
-        console.log(response);
-        $scope.result = response.data;
-    }, function(response) {
-
-        //fail case
-    //    document.write("fail");
-        console.log(response);
-        $scope.result = response.data;
-    });
-
-     $scope.lol=function(){
-        $http.get("http://localhost:8080/c=3", {
-            params: {"season": 14, "start": 20, "end": 20}
-        }).success(function (snapResponse) {
-            console.log("Success", snapResponse);
-            $scope.snapResult = snapResponse;
-        }).error(function () {
-            console.log("error");
+    /**
+    saveEnemyType - current start + end value should be dynamic
+    **/
+    $scope.selectStatisticsInSeason = function (){
+        var def_events = [];
+        enemyType=document.getElementById('enemyType').value;
+        dataService.getData(currentSeason, 2, 2).then(function(response)
+        {
+            if(enemyType == "global_stats")
+            {
+                $scope.data = response.data;
+            }
+            else
+            {
+                var i;
+                if(response.data.defend_events != null)
+                {
+                    for(i =0;i<response.data.defend_events.length;i++)
+                    {
+                        if(response.data.defend_events[i].enemy == enemyType)
+                        {
+                            def_events.push(response.data.defend_events[i]);
+                        }
+                    }
+                    $scope.data = def_events;
+                }
+            }
         });
     };
-
-    $scope.defaultSlide = function () {
-        document.getElementById("sliderValue").value = "1";
-    };
-
-    // möjliggöra dynamisk ändring --> kommer att användas senare
-    $scope.getEventSize=function () {
-        return 50;
-    };
 });
-*/

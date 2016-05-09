@@ -23,18 +23,21 @@
         <p style="text-align: center;">
             <label>Day: </label>
             <output id="sliderValue"></output>
-
         </p>
         <!-- change var name  -->
         <input style="width:500px;" type="range" id="rating" min="1" max="{{getEventSize()}}" value="1" step="1"
                onchange="angular.element(this).scope().evalSlider()" oninput="evalSlider2()"/>
-        <br /><select id="enemyType" name="Faction" data-value="bugs" onchange="saveEnemyType()">
-            <option value="bugs">Bugs</option>
-            <option value="the_illuminate">Illuminate</option>
-            <option value="cyborgs">Cyborgs</option>
+        <br/><br/>
+        <br/>
+        <select id="enemyType" name="Faction" data-value="bugs" onchange="angular.element(this).scope().selectStatisticsInSeason()">
+            <option value="global_stats">GlobalStats</option>
+            <option value="0">Bugs</option>
+            <option value="1">Illuminate</option>
+            <option value="2">Cyborgs</option>
         </select>
+        <br/>
     </form>
-    <br/>
+
 </div>
 
 
