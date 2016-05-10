@@ -103,7 +103,7 @@ app.controller("WebApiCtrl", function ($scope, dataService) {
             $scope.trubble = dataResponse;
             currentSeason = dataResponse.data.campaign_status[1].season;
             createSelectOptions();
-            run(dataResponse.data.campaign_status[4]);
+            run(dataResponse.data.statistics);
         });
     };
 
@@ -120,9 +120,9 @@ app.controller("WebApiCtrl", function ($scope, dataService) {
 
     /**fixed currentsSeason in getCampaign function. It gets the currentSeason**/
     dataService.getCampaign().then(function (response) {
-
         $scope.campaign = response.data;
         currentSeason = response.data.campaign_status[0].season;
+        run(dataResponse.data.statistics);
     });
 
     /**
@@ -155,7 +155,7 @@ app.controller("WebApiCtrl", function ($scope, dataService) {
                             def_events.push(response.data.defend_events[i]);
                         }
                     }
-
+                    
                     $scope.data = def_events;
                 }
             }
