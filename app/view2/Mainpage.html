@@ -9,6 +9,7 @@
     <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.3.14/angular.min.js"></script>
     <script src="MainpageData.js"></script>
     <script src="Calculation.js"></script>
+    <script src="LinearCalc.js"></script>
     <link rel="stylesheet" type="text/css" href="MainpageDesign.css">
     <link rel="stylesheet" type="text/css" href="rangeBarDesign.css">
     <link rel="stylesheet" type="text/css" href="droplistDesign.css">
@@ -18,7 +19,7 @@
 <div ng-controller="WebApiCtrl">
     <h1 style="color: rgba(0, 0, 0, 1)">View example</h1><br/>
     <div id="slider" style="background: rgba(209, 255, 181, 1); height:500px; width: 98%;">
-        {{data}}
+        {{data}} <br /><br />
     </div>
     <br/><br/>
     <form style="text-align:center">
@@ -27,8 +28,8 @@
             <output id="sliderValue"></output>
         </p>
         <!-- change var name  -->
-        <input style="width:500px;" type="range" id="rating" min="1" max="{{getEventSize()}}" value="{{defaultSlide()}}" step="0.1"
-               onchange="angular.element(this).scope().evalSlider();angular.element(this).scope().camp();" oninput="evalSlider2()"/>
+        <input style="width:500px;" type="range" id="rating" min="1" max="{{getEventSize()}}" value="{{defaultSlide()}}" step="0.01"
+               onchange="angular.element(this).scope().camp();evalSlider2();" oninput="evalSlider2()"/>
         <br /><br/>
         <br/>
 
@@ -356,6 +357,8 @@
             </table>
         </tr>
     </table>
+
+    {{calculation}}
 </div>
 </body>
 </html>

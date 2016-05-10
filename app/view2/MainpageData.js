@@ -6,11 +6,23 @@ var flagg = false;
 
 
 function evalSlider2() {
-
     sliderVal = document.getElementById('rating').value;
     document.getElementById('sliderValue').innerHTML = sliderVal;
+    var integer = sliderVal | 0;
+    var float=sliderVal%integer;
+    if(float > 0.24){
+        sliderVal=integer+1;
+        document.getElementById('sliderValue').innerHTML= sliderVal;
+        float=0;
+    }
 }
 
+function isInt(number){
+    if(number % 1 == 0)
+        return true;
+    else
+        return false;
+}
 
 function createSelectOptions() {
 
@@ -43,12 +55,6 @@ var app = angular.module('app', [], function ($httpProvider) {
 });
 
 
-/**
- *  Denna funktion modifierades av Teddy & Carlos för att fungera med drop-down
- *  menyn. Anropen bör ske med parametrarna season, start, end. Statiska värden
- *  lagt till för befintliga anrop till dataService. Dessa anrop till service bör ses till om det
- *  int fungerar som det bör.
- */
 app.service('dataService', function ($http) {
 
     this.getData = function (season, start, end) {
@@ -82,7 +88,7 @@ app.controller("WebApiCtrl", function ($scope, dataService) {
     });
 
     $scope.evalSlider = function () {
-        
+
         dataService.getData(choosedSeason, sliderVal, sliderVal).then(function (dataResponse) {
 
             $scope.data = dataResponse;
@@ -90,9 +96,8 @@ app.controller("WebApiCtrl", function ($scope, dataService) {
     };
 
     $scope.camp = function () {
-        
-        dataService.getData(choosedSeason, sliderVal, sliderVal).then(function (dataResponse) {
 
+        dataService.getData(choosedSeason, sliderVal, sliderVal).then(function (dataResponse) {
             $scope.data = dataResponse;
         });
     };
@@ -104,33 +109,27 @@ app.controller("WebApiCtrl", function ($scope, dataService) {
             currentSeason = dataResponse.data.campaign_status[1].season;
             createSelectOptions();
             run(dataResponse.data.statistics);
+            $scope.calculation=getCalculations();
         });
     };
 
     $scope.defaultSlide = function () {
-
         return 1;
     };
 
     // möjliggöra dynamisk ändring --> kommer att användas senare
     $scope.getEventSize = function () {
-
-        return 50;
+        return 30;
     };
 
     /**fixed currentsSeason in getCampaign function. It gets the currentSeason**/
     dataService.getCampaign().then(function (response) {
         $scope.campaign = response.data;
         currentSeason = response.data.campaign_status[0].season;
-        run(dataResponse.data.statistics);
+        run(response.data.statistics);
+        $scope.calculation=getCalculations();
     });
 
-    /**
-     * Lagt till från Teddy & Carlos för val av fiende/globala värden i dropdown meny
-     */
-    /**
-     saveEnemyType - current start + end value should be dynamic
-     **/
     $scope.selectStatisticsInSeason = function () {
 
         var def_events = [];
@@ -145,17 +144,12 @@ app.controller("WebApiCtrl", function ($scope, dataService) {
             else {
 
                 var i;
-
                 if (response.data.defend_events != null) {
-
                     for (i = 0; i < response.data.defend_events.length; i++) {
-
                         if (response.data.defend_events[i].enemy == enemyType) {
-
                             def_events.push(response.data.defend_events[i]);
                         }
                     }
-                    
                     $scope.data = def_events;
                 }
             }
