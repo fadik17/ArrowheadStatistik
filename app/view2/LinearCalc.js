@@ -7,6 +7,7 @@ var startPoints, endPoints, difference, diffperhour;
 var text;
 
 function run(reqTime, stPoints, enPoints){
+
     //requestedTime = reqTime;
     //startPoints = stPoints;
     //endPoints = enPoints;
@@ -21,15 +22,19 @@ function run(reqTime, stPoints, enPoints){
 }
 
 function getHours(){
+
     var rTime = requestedTime | 0;
     var mod = Math.round((requestedTime % rTime) * 100);
     convertedTime = mod;
 }
 
 function pointsAtRequestedTime(){
+
     var points = 0;
     var i;
+
     for(i = 0; i < convertedTime; i++){
+
         points += diffperhour;
     }
 

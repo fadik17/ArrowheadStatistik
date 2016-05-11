@@ -24,9 +24,11 @@ function evalSlider2() {
 function isInt(number){
 
     if(number % 1 == 0) {
+
         return true;
     }
     else {
+
         return false;
     }
 }
@@ -105,9 +107,11 @@ app.controller("WebApiCtrl", function ($scope, dataService) {
     $scope.camp = function () {
 
         dataService.getData(choosedSeason, sliderVal, sliderVal).then(function (dataResponse) {
+
             $scope.data = dataResponse;
         });
     };
+
     $scope.getSeason = function () {
 
         dataService.getCampaign().then(function (dataResponse) {
@@ -121,16 +125,19 @@ app.controller("WebApiCtrl", function ($scope, dataService) {
     };
 
     $scope.defaultSlide = function () {
+
         return 1;
     };
 
     // möjliggöra dynamisk ändring --> kommer att användas senare
     $scope.getEventSize = function () {
+
         return 30;
     };
 
     /**fixed currentsSeason in getCampaign function. It gets the currentSeason**/
     dataService.getCampaign().then(function (response) {
+
         $scope.campaign = response.data;
         currentSeason = response.data.campaign_status[0].season;
         run(response.data.statistics);
@@ -151,15 +158,22 @@ app.controller("WebApiCtrl", function ($scope, dataService) {
             else {
 
                 var i;
+
                 if (response.data.defend_events != null) {
+
                     for (i = 0; i < response.data.defend_events.length; i++) {
+
                         if (response.data.defend_events[i].enemy == enemyType) {
+
                             def_events.push(response.data.defend_events[i]);
                         }
                     }
+
                     $scope.data = def_events;
                 }
             }
         });
     };
+
+    //document.getElementById("slider").innerHTML = JSON.stringify(data, null, 4);
 });

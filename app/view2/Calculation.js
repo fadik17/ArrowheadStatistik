@@ -1,9 +1,13 @@
-var enemyResult=[];
+var enemyResult = [];
 
 function run(jsonObj) {
+
     var i;
-    if(jsonObj!=null) {
+
+    if (jsonObj != null) {
+
         for (i = 0; i < jsonObj.length; i++) {
+
             var accidential = accidentialCalc(jsonObj[i].accidentals, jsonObj[i].kills);
             var attackPercentage = attackSuccessCalc(jsonObj[i].successful_attack_events, jsonObj[i].attack_events);
             var defendPercentage = defendSuccessCalc(jsonObj[i].successful_defend_events, jsonObj[i].defend_events);
@@ -12,6 +16,7 @@ function run(jsonObj) {
             var accuracy = accuracyCalc(jsonObj[i].hits, jsonObj[i].shots);
 
             enemyResult[i] = {
+
                 accuracy: accuracy,
                 kdRatio: kdRatio,
                 missionsPercentage: missionsPercentage,
@@ -24,52 +29,69 @@ function run(jsonObj) {
 }
 
 function accuracyCalc(hits, shots) {
+
     if (hits == 0 || shots == 0) {
+
         return 0;
-    }else {
+    } else {
+
         return ((hits / shots) * 100);
     }
 }
 
 function kdRatioCalc(kills, deaths) {
-    if (kills == 0 || deaths == 0){
+
+    if (kills == 0 || deaths == 0) {
+
         return 0;
-    }else {
-        return(kills / deaths);
+    } else {
+
+        return (kills / deaths);
     }
 }
 
-function accidentialCalc (accidentals,kills) {
+function accidentialCalc(accidentals, kills) {
+
     return ((accidentals / kills) * 100);
 }
 
-function attackSuccessCalc (successful_attack_events,attack_events) {
-    if (successful_attack_events == 0 || attack_events == 0) {
-       return 0;
-    }
-    else {
-       return (successful_attack_events / attack_events) * 100;
-    }
-}
+function attackSuccessCalc(successful_attack_events, attack_events) {
 
-function defendSuccessCalc (successful_defend_events, defend_events){
-    if (successful_defend_events == 0 || defend_events == 0){
+    if (successful_attack_events == 0 || attack_events == 0) {
+
         return 0;
     }
     else {
+
+        return (successful_attack_events / attack_events) * 100;
+    }
+}
+
+function defendSuccessCalc(successful_defend_events, defend_events) {
+
+    if (successful_defend_events == 0 || defend_events == 0) {
+
+        return 0;
+    }
+    else {
+
         return (successful_defend_events / defend_events) * 100;
     }
 }
 
-function missionSuccessCalc (successful_missions, missions) {
+function missionSuccessCalc(successful_missions, missions) {
+
     if (successful_missions == 0 || missions == 0) {
+
         return 0;
     }
     else {
+
         return (successful_missions / missions) * 100;
     }
 }
 
 function getCalculations() {
+
     return enemyResult;
 }
