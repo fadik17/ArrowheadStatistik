@@ -3,7 +3,8 @@ var enemyType = "general";
 var choosedSeason = 1;
 var currentSeason = 1;
 var flagg = false;
-
+var one,two;
+var timestamp=null;
 
 function evalSlider2() {
 
@@ -53,7 +54,6 @@ function createSelectOptions() {
 }
 
 function saveSeason() {
-
     choosedSeason = document.getElementById('seasons').value;
 }
 
@@ -92,30 +92,47 @@ app.controller("WebApiCtrl", function ($scope, dataService) {
     $scope.data = null;
 
     dataService.getData(choosedSeason, sliderVal, sliderVal).then(function (dataResponse) {
-
         $scope.data = dataResponse;
     });
 
-    $scope.evalSlider = function () {
+    $scope.getSnaps = function () {
 
         dataService.getData(choosedSeason, sliderVal, sliderVal).then(function (dataResponse) {
-
             $scope.data = dataResponse;
         });
     };
 
     $scope.camp = function () {
-
-        dataService.getData(choosedSeason, sliderVal, sliderVal).then(function (dataResponse) {
-
-            $scope.data = dataResponse;
-        });
+        var j;
+        var nowtimestamp = Math.round(new Date().getTime()/1000); // unix i sekunder
+        document.write("NOW sTAMP: "+ nowtimestamp);
+        timestamp = nowtimestamp-3600000; // en dag bakåt?
+        for(j=0;j<2;j++){
+            test(j, timestamp, nowtimestamp);
+        }
     };
 
+    function test(j, timestamp, nowtimestamp){
+        dataService.getData(choosedSeason, timestamp, nowtimestamp).then(function (dataResponse) {
+
+            // $scope.data = dataResponse;
+            if(j==0){
+                one=dataResponse.data.defend_events[0].points;
+          //      document.write("lol1: "+one);
+                timestamp-=3600000;
+            }
+            if(j==1){
+                two=dataResponse.data.defend_events[0].points;
+          //      document.write("One: "+one +" ,two :"+two +"<br />");
+          //      document.write(" FUNKAR: "+runLinear(sliderVal,one,two));
+            //    document.write("lol 2: "+two);
+            }
+        });
+
+    }
+
     $scope.getSeason = function () {
-
         dataService.getCampaign().then(function (dataResponse) {
-
             $scope.trubble = dataResponse;
             currentSeason = dataResponse.data.campaign_status[1].season;
             createSelectOptions();
@@ -125,13 +142,11 @@ app.controller("WebApiCtrl", function ($scope, dataService) {
     };
 
     $scope.defaultSlide = function () {
-
         return 1;
     };
 
     // möjliggöra dynamisk ändring --> kommer att användas senare
     $scope.getEventSize = function () {
-
         return 30;
     };
 
@@ -174,6 +189,4 @@ app.controller("WebApiCtrl", function ($scope, dataService) {
             }
         });
     };
-
-    //document.getElementById("slider").innerHTML = JSON.stringify(data, null, 4);
 });

@@ -28,9 +28,11 @@
             <output id="sliderValue"></output>
         </p>
         <!-- change var name  -->
+
         <input style="width:500px;" type="range" id="rating" min="1" max="{{getEventSize()}}" value="{{defaultSlide()}}" step="0.01"
                onchange="angular.element(this).scope().camp();evalSlider2();" oninput="evalSlider2()"/>
-        <br /><br/>
+
+            <br /><br/>
         <br/>
 
         <!--Sätter in Select  och innehåll från delen som Teddy & Carlos jobbade med, det är det enda som ändras i denna fil -->
@@ -41,7 +43,7 @@
             <option value="2">Cyborgs</option>
         </select>
 
-        <select id="seasons"data-value="bugs" onmouseover="angular.element(this).scope().getSeason();" onchange="saveSeason();angular.element(this).scope().camp();">
+        <select id="seasons"data-value="bugs" onmouseover="angular.element(this).scope().getSeason();" onchange="saveSeason();angular.element(this).scope().getSnaps();">
             <option value="">Season</option>
         </select>
     </form>
@@ -358,7 +360,50 @@
         </tr>
     </table>
 
-    {{calculation}}
+    <table style="width:75%">
+        <tr>
+            <th>Accuracy:</th>
+            <th>KD ratio</th>
+            <th>Mission Percentage</th>
+            <th>Defend Percentage</th>
+            <th>Attack Percentage</th>
+            <th>Accidential kills</th>
+        </tr>
+        <td>
+            <li ng-repeat="calc in calculation">
+                {{calc.accuracy}}
+            </li>
+        </td>
+        <td>
+            <li ng-repeat="calc in calculation">
+                {{calc.kdRatio}}
+            </li>
+        </td>
+
+        <td>
+            <li ng-repeat="calc in calculation">
+                {{calc.missionsPercentage}}
+            </li>
+        </td>
+
+        <td>
+            <li ng-repeat="calc in calculation">
+                {{calc.defendPercentage}}
+            </li>
+        </td>
+
+        <td>
+            <li ng-repeat="calc in calculation">
+                {{calc.attackPercentage}}
+            </li>
+        </td>
+
+        <td>
+            <li ng-repeat="calc in calculation">
+                {{calc.accidentalKills}}
+            </li>
+        </td>
+    </table>
 </div>
 </body>
 </html>
