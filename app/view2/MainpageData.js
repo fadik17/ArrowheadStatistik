@@ -6,11 +6,15 @@ var flagg = false;
 
 
 function evalSlider2() {
+
     sliderVal = document.getElementById('rating').value;
     document.getElementById('sliderValue').innerHTML = sliderVal;
+
     var integer = sliderVal | 0;
     var float=sliderVal%integer;
+
     if(float > 0.24){
+
         sliderVal=integer+1;
         document.getElementById('sliderValue').innerHTML= sliderVal;
         float=0;
@@ -18,10 +22,13 @@ function evalSlider2() {
 }
 
 function isInt(number){
-    if(number % 1 == 0)
+
+    if(number % 1 == 0) {
         return true;
-    else
+    }
+    else {
         return false;
+    }
 }
 
 function createSelectOptions() {
