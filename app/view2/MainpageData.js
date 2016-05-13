@@ -1,10 +1,13 @@
 var sliderVal = 1;
-var enemyType = "general";
+var enemyType = "global_stats"; // Teddy & Co, default drop down menu value
 var choosedSeason = 1;
 var currentSeason = 1;
 var flagg = false;
 var one,two;
 var timestamp=null;
+
+
+var jsonData = null; // Teddy & Co, for filtering
 
 function evalSlider2() {
 
@@ -14,7 +17,7 @@ function evalSlider2() {
     var integer = sliderVal | 0;
     var float=sliderVal%integer;
 
-    if(float > 0.24){
+    if(float > 0.23){
 
         sliderVal=integer+1;
         document.getElementById('sliderValue').innerHTML= sliderVal;
@@ -59,8 +62,11 @@ function saveSeason() {
 
 var app = angular.module('app', [], function ($httpProvider) {
 
+    /**
+     * Teddy & Co modified following:
+     */
     $httpProvider.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded';
-    $httpProvider.defaults.headers.post['Access-Control-Allow-Origin'] = '*';
+    //Access-Control-Allow-Origin not needed anymore
 });
 
 
@@ -68,20 +74,48 @@ app.service('dataService', function ($http) {
 
     this.getData = function (season, start, end) {
 
+        /**
+         * Teddy & Co modified following:
+         */
         // $http() returns a $promise that we can add handlers with .then()
         return $http({
-            method: 'GET',
-            url: "http://localhost:8080/GetSnapshots",
-            //params: {"season": choosedSeason, "start": sliderVal, "end": sliderVal}
+            /*method: 'POST',
+             url: 'https://api.helldiversgame.com/0.3/',*/
+            method:'GET',
+            url:"http://localhost:8080/GetSnapshots",
+            header: 'Content-Type : application/x-www-form-urlencoded',
+            //action : 'get_snapshots',
             params: {"season": season, "start": start, "end": end}
         });
     };
 
     this.getCampaign = function () {
 
+        /**
+         * Teddy & Co modified following:
+         */
         return $http({
             method: 'GET',
-            url: "http://localhost:8080/GetCampaignStatus"
+            url:"http://localhost:8080/GetCampaignStatus",
+            //method: "POST",
+            //url: 'https://api.helldiversgame.com/0.3/',
+            //header: 'Content-Type : application/x-www-form-urlencoded',
+            //header: 'Access-Control-Allow-Origin : *',
+            //header: "Accept: application/json",
+            //params: {"season": choosedSeason, "start": sliderVal, "end": sliderVal}
+            headers: { "Content-Type" : "application/x-www-form-urlencoded"},
+            //params: {"season": season, "start": start, "end": end}
+            data :'action=get_campaign_status'
+        });
+    };
+
+    this.getSeasonStatistics = function(season)
+    {
+        return $http({
+            method: 'GET',
+            url:"http://localhost:8080/GetSeasonStats",
+            headers: { "Content-Type" : "application/x-www-form-urlencoded"},
+            params: {"season": season}
         });
     };
 });
@@ -90,6 +124,7 @@ app.service('dataService', function ($http) {
 app.controller("WebApiCtrl", function ($scope, dataService) {
 
     $scope.data = null;
+
 
     dataService.getData(choosedSeason, sliderVal, sliderVal).then(function (dataResponse) {
         $scope.data = dataResponse;
@@ -102,13 +137,81 @@ app.controller("WebApiCtrl", function ($scope, dataService) {
         });
     };
 
+    /**
+     * Teddy & Co modified:
+     */
+    $scope.evalSlider = function () {
+        dataService.getData(choosedSeason, sliderVal, sliderVal).then(function (dataResponse) {
+            $scope.data = dataResponse;
+        });
+    };
+
+    /**
+     * Teddy & Co modified:
+     */
     $scope.camp = function () {
-        var j;
-        var nowtimestamp = Math.round(new Date().getTime()/1000); // unix i sekunder
-        document.write("NOW sTAMP: "+ nowtimestamp);
-        timestamp = nowtimestamp-3600000; // en dag bakåt?
-        for(j=0;j<2;j++){
-            test(j, timestamp, nowtimestamp);
+        enemyType=document.getElementById('enemyType').value;
+        var filterOption = document.getElementById('all').value;
+        var season = document.getElementById('seasons').value;
+        console.log(enemyType);
+        if(enemyType == "global_stats")
+        {
+
+                console.log(season);
+                dataService.getSeasonStatistics(season).then(function (dataResponse) {
+                    console.log("in get season stats");
+                    console.log(dataResponse.data);
+                   $scope.data = dataResponse.data;
+                });
+        }
+        else //this means that other than global i chosen
+        {
+            dataService.getData(choosedSeason, sliderVal, sliderVal).then(function (dataResponse) {
+                jsonData = dataResponse;
+
+
+               // console.log("allfilter=" + allFilter + "filterOption=" + filterOption);
+                console.log(filterOption);
+                //save data to var
+                var result = [];
+                //save data to var
+                var def_events = [];
+                var atta_events = [];
+
+                for(var i=0;i<dataResponse.data.defend_events.length;i++)
+                {
+                    if(enemyType == dataResponse.data.defend_events[i].enemy)
+                    {
+                        console.log(dataResponse.data.defend_events[i]);
+                        def_events.push(dataResponse.data.defend_events[i]);
+                    }
+                }
+                for(var i=0;i<dataResponse.data.attack_events.length;i++)
+                {
+                    if(enemyType == dataResponse.data.attack_events[i].enemy)
+                    {
+                        atta_events.push(dataResponse.data.attack_events[i]);
+                    }
+                }
+                //save data to var end
+                    switch(filterOption)
+                    {
+                        case "defend_events":
+                            result = def_events;
+                            console.log("in defend_events");
+                            break;
+                        case "attack_events":
+                            result = atta_events;
+                            console.log("in attack_events");
+                            break;
+                        default:
+                            result = def_events.concat(atta_events);
+                            console.log("in default");
+                            console.log(result);
+                    }
+
+                $scope.data = result;
+            });
         }
     };
 
@@ -159,34 +262,39 @@ app.controller("WebApiCtrl", function ($scope, dataService) {
         $scope.calculation=getCalculations();
     });
 
-    $scope.selectStatisticsInSeason = function () {
-
-        var def_events = [];
-        enemyType = document.getElementById('enemyType').value;
-
-        dataService.getData(choosedSeason, sliderVal, sliderVal).then(function (response) {
-
-            if (enemyType == "global_stats") {
-
-                $scope.data = response.data;
-            }
-            else {
-
-                var i;
-
-                if (response.data.defend_events != null) {
-
-                    for (i = 0; i < response.data.defend_events.length; i++) {
-
-                        if (response.data.defend_events[i].enemy == enemyType) {
-
-                            def_events.push(response.data.defend_events[i]);
-                        }
-                    }
-
-                    $scope.data = def_events;
-                }
-            }
-        });
+    /**
+     * Teddy & Co modified:
+     */
+    $scope.selectStatisticsInSeason = function (){
+        enemyType=document.getElementById('enemyType').value;
     };
+
+    /**
+     * Teddy & Co added:
+     */
+    $scope.filterData = function(){
+
+
+        var element = document.getElementById('all');
+        if(element.firstElementChild.nextElementSibling==null)
+        {
+            console.log("det är null");
+        }
+
+        if(jsonData != null && element.firstElementChild.nextElementSibling==null)
+        {
+            for(var datafiltered  in jsonData.data)
+            {
+                var option = document.createElement("option");
+                option.text = datafiltered;
+                //console.log(option);
+                element.add(option);
+            }
+
+            /**
+             * this part of filtering is not used
+             * **/
+        }
+    }
+
 });
