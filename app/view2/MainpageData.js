@@ -1,3 +1,7 @@
+/**
+ * Created by Fadi Kamil & Dani Daryaweesh
+ */
+
 var sliderVal = 1;
 var enemyType = "global_stats"; // Teddy & Co, default drop down menu value
 var choosedSeason = 1;
@@ -57,6 +61,7 @@ function createSelectOptions() {
 }
 
 function saveSeason() {
+    
     choosedSeason = document.getElementById('seasons').value;
 }
 

@@ -1,3 +1,7 @@
+/**
+ * Created by Fadi Kamil & Dani Daryaweesh
+ */
+
 var enemyResult = [];
 
 function run(jsonObj) {
