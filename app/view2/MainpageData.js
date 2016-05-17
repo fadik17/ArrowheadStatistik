@@ -27,6 +27,7 @@ function evalSlider2() {
 }
 
 function saveSeason(){
+
     choosedSeason = document.getElementById('seasons').value;
 }
 
@@ -85,6 +86,7 @@ app.controller("WebApiCtrl", function ($scope, dataService) {
 
     // initierar alla variabler som behövs från början
     dataService.getCampaign().then(function (response) {
+
         $scope.campaign = response.data;
         currentSeason = response.data.campaign_status[0].season;
         choosedSeason=currentSeason;
@@ -93,9 +95,12 @@ app.controller("WebApiCtrl", function ($scope, dataService) {
         $scope.calculation = getCalculations();
         getInitData();
     });
+
     // får en snapshots som senare används för att extraherar nödvändiga tider
     function getInitData(){
+
         dataService.getData(choosedSeason,null,null).then(function (dataResponse) {
+
             $scope.dataNotNeeded=dataResponse;
             extractInitData(dataResponse.data.snapshots);
             doSnap(lastDay,lastDay);
@@ -103,6 +108,7 @@ app.controller("WebApiCtrl", function ($scope, dataService) {
     }
     // extraherar nödvändiga värden som behövs från början från en snapshot
     function extractInitData(dataa){
+
         firstDay=dataa[0].time;
         var length=dataa.length;
         lastDay=dataa[length-1].time;
@@ -111,6 +117,7 @@ app.controller("WebApiCtrl", function ($scope, dataService) {
 
     // initierar data igen & beräknar den valda tidspunkten från slidern för att få en tillämplig snapshot
     $scope.allData = function () {
+
         var slidValue=(Math.ceil(sliderVal-1)*86400)+firstDay;
         calculatedTime=slidValue;
         doSnap(firstDay,slidValue);
@@ -118,7 +125,9 @@ app.controller("WebApiCtrl", function ($scope, dataService) {
 
     // hämtar samtliga snapshots och registrera nödvändig info
     $scope.allDataAgain=function () {
+
         dataService.getData(choosedSeason,null,null).then(function (dataResponse) {
+
             $scope.dataNotNeeded=dataResponse;
             extractInitData(dataResponse.data.snapshots);
             $scope.data=null;
@@ -128,7 +137,9 @@ app.controller("WebApiCtrl", function ($scope, dataService) {
     };
     // hämtar en snapshot beroende av tiden som skickas in
     function doSnap(first,lastDay){
+
         dataService.getData(choosedSeason, first, lastDay).then(function (dataResponse) {
+
             $scope.data=dataResponse;
             extractPoints(dataResponse.data.snapshots);
        //     $scope.baba=extractPoints(dataResponse.data.snapshots);
@@ -137,21 +148,27 @@ app.controller("WebApiCtrl", function ($scope, dataService) {
     }
     // extraherar poäng från alla enemy typer + global enemy från en vald snapshot
     function extractPoints(dataa){
+
         var global=null,enemy0=null, enemy1=null, enemy2=null;
         var start=[], end=[];
         var enemyTypes=[], enemyLerps=[];
 
         for(var i =0;i<dataa.length;i++){
+
             var extract=JSON.parse(dataa[i].data);
 
             for(var j=0;j<extract.length;j++){
+
                 global+=extract[j].points_taken;
 
                 if(j==0){
+
                     enemy0+=extract[j].points_taken;
                 }else if(j==1){
+
                     enemy1+=extract[j].points_taken;
                 }else{
+
                     enemy2+=extract[j].points_taken;
                 }
             }
@@ -177,6 +194,7 @@ app.controller("WebApiCtrl", function ($scope, dataService) {
 
     // Ändrar dynamisk storleken på slidern beroende av den valda säsongen
     $scope.getEventSize = function () {
+
         $scope.len=sliderlength;
         return $scope.len;
     };
@@ -185,6 +203,7 @@ app.controller("WebApiCtrl", function ($scope, dataService) {
      * Teddy & Co modified:
      */
     $scope.camp = function () {
+
         enemyType=document.getElementById('enemyType').value;
         var filterOption = document.getElementById('all').value;
         var season = document.getElementById('seasons').value;
@@ -194,16 +213,20 @@ app.controller("WebApiCtrl", function ($scope, dataService) {
 
             console.log(season);
             dataService.getSeasonStatistics(season).then(function (dataResponse) {
+
                 console.log("in get season stats");
                 console.log(dataResponse.data);
                 $scope.data = dataResponse.data;
             });
         }
-        else //this means that other than global i chosen
-        {
+        //this means that other than global i chosen
+        else {
+
             calculatedTime=(Math.ceil(sliderVal-1)*86400)+firstDay; // ÄNDRAT HÄR ***
             $scope.data=null;
+
             dataService.getData(choosedSeason, firstDay, calculatedTime).then(function (dataResponse) {
+
                 jsonData = dataResponse;
 
                 // console.log("allfilter=" + allFilter + "filterOption=" + filterOption);
@@ -214,24 +237,24 @@ app.controller("WebApiCtrl", function ($scope, dataService) {
                 var def_events = [];
                 var atta_events = [];
 
-                for(var i=0;i<dataResponse.data.defend_events.length;i++)
-                {
-                    if(enemyType == dataResponse.data.defend_events[i].enemy)
-                    {
+                for(var i=0;i<dataResponse.data.defend_events.length;i++) {
+
+                    if(enemyType == dataResponse.data.defend_events[i].enemy) {
+
                         console.log(dataResponse.data.defend_events[i]);
                         def_events.push(dataResponse.data.defend_events[i]);
                     }
                 }
-                for(var i=0;i<dataResponse.data.attack_events.length;i++)
-                {
-                    if(enemyType == dataResponse.data.attack_events[i].enemy)
-                    {
+                for(var i=0;i<dataResponse.data.attack_events.length;i++) {
+
+                    if(enemyType == dataResponse.data.attack_events[i].enemy) {
+
                         atta_events.push(dataResponse.data.attack_events[i]);
                     }
                 }
                 //save data to var end
-                switch(filterOption)
-                {
+                switch(filterOption) {
+
                     case "defend_events":
                         result = def_events;
                         console.log("in defend_events");
@@ -252,16 +275,18 @@ app.controller("WebApiCtrl", function ($scope, dataService) {
     };
 
     $scope.filterData = function(){
+
         var element = document.getElementById('all');
-        if(element.firstElementChild.nextElementSibling==null)
-        {
+
+        if(element.firstElementChild.nextElementSibling==null) {
+
             console.log("det är null");
         }
 
-        if(jsonData != null && element.firstElementChild.nextElementSibling==null)
-        {
-            for(var datafiltered  in jsonData.data) 
-            {
+        if(jsonData != null && element.firstElementChild.nextElementSibling==null) {
+
+            for(var datafiltered  in jsonData.data) {
+                
                 var option = document.createElement("option");
                 option.text = datafiltered;
                 //console.log(option);
