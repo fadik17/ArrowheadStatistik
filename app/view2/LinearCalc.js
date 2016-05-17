@@ -1,35 +1,27 @@
+/**
+ * Created by Alican Bircan 
+ * Edited by Fadi Kamil & Dani Daryaweesh
+ */
 
 var requestedTime, convertedTime;
-var startPoints, endPoints, difference, diffperhour;
+var startPoints, endPoints;
 
-
-function runLinear(reqTime, stPoints,enPoints){
+function main(reqTime, stPoints, enPoints){
     requestedTime = reqTime;
     startPoints = stPoints;
     endPoints = enPoints;
-
-    difference = endPoints - startPoints;
-    diffperhour = Math.round(difference/24);
-    getHours();
-    return pointsAtRequestedTime();
+  //  document.write("requ: "+requestedTime+" ,start: "+startPoints+" ,end: "+endPoints);
+    getT();
+    return lerp(startPoints, endPoints, convertedTime);
 }
 
-function getHours(){
-
-    var rTime = requestedTime | 0;
-  //  document.write("rTime: "+rTime);
-    var mod = Math.round((requestedTime % rTime) * 100);
-  //  document.write("mod "+mod);
-    convertedTime = mod;
+function getT(){
+    var rTime = Math.floor(requestedTime);
+    convertedTime = requestedTime - rTime;
+    convertedTime = Math.ceil(convertedTime * 100) / 100;
 }
 
-function pointsAtRequestedTime(){
-
-    var points = 0;
-    var i;
-
-    for(i = 0; i < convertedTime; i++){
-        points += diffperhour;
-    }
-    return points + startPoints;
+function lerp(a, b, t) {
+    var x = a + t * (b - a);
+    return x;
 }

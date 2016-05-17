@@ -3,15 +3,13 @@
  */
 
 var sliderVal = 1;
-var enemyType = "global_stats"; // Teddy & Co, default drop down menu value
+var enemyType = "global_stats";
 var choosedSeason = 1;
 var currentSeason = 1;
 var flagg = false;
-var one,two;
-var timestamp=null;
-
-
-var jsonData = null; // Teddy & Co, for filtering
+var firstDay=null,lastDay=null,sliderlength=null;
+var calculatedTime=null;
+var jsonData = null;
 
 function evalSlider2() {
 
@@ -21,24 +19,15 @@ function evalSlider2() {
     var integer = sliderVal | 0;
     var float=sliderVal%integer;
 
-    if(float > 0.23){
-
+    if(float > 0.99){
         sliderVal=integer+1;
         document.getElementById('sliderValue').innerHTML= sliderVal;
         float=0;
     }
 }
 
-function isInt(number){
-
-    if(number % 1 == 0) {
-
-        return true;
-    }
-    else {
-
-        return false;
-    }
+function saveSeason(){
+    choosedSeason = document.getElementById('seasons').value;
 }
 
 function createSelectOptions() {
@@ -60,18 +49,10 @@ function createSelectOptions() {
     }
 }
 
-function saveSeason() {
-    
-    choosedSeason = document.getElementById('seasons').value;
-}
-
 var app = angular.module('app', [], function ($httpProvider) {
 
-    /**
-     * Teddy & Co modified following:
-     */
     $httpProvider.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded';
-    //Access-Control-Allow-Origin not needed anymore
+    $httpProvider.defaults.headers.post['Access-Control-Allow-Origin'] = '*';
 });
 
 
@@ -79,48 +60,20 @@ app.service('dataService', function ($http) {
 
     this.getData = function (season, start, end) {
 
-        /**
-         * Teddy & Co modified following:
-         */
         // $http() returns a $promise that we can add handlers with .then()
         return $http({
-            /*method: 'POST',
-             url: 'https://api.helldiversgame.com/0.3/',*/
-            method:'GET',
-            url:"http://localhost:8080/GetSnapshots",
-            header: 'Content-Type : application/x-www-form-urlencoded',
-            //action : 'get_snapshots',
+            method: 'GET',
+            url: "http://localhost:8080/GetSnapshots",
+            //params: {"season": choosedSeason, "start": sliderVal, "end": sliderVal}
             params: {"season": season, "start": start, "end": end}
         });
     };
 
     this.getCampaign = function () {
 
-        /**
-         * Teddy & Co modified following:
-         */
         return $http({
             method: 'GET',
-            url:"http://localhost:8080/GetCampaignStatus",
-            //method: "POST",
-            //url: 'https://api.helldiversgame.com/0.3/',
-            //header: 'Content-Type : application/x-www-form-urlencoded',
-            //header: 'Access-Control-Allow-Origin : *',
-            //header: "Accept: application/json",
-            //params: {"season": choosedSeason, "start": sliderVal, "end": sliderVal}
-            headers: { "Content-Type" : "application/x-www-form-urlencoded"},
-            //params: {"season": season, "start": start, "end": end}
-            data :'action=get_campaign_status'
-        });
-    };
-
-    this.getSeasonStatistics = function(season)
-    {
-        return $http({
-            method: 'GET',
-            url:"http://localhost:8080/GetSeasonStats",
-            headers: { "Content-Type" : "application/x-www-form-urlencoded"},
-            params: {"season": season}
+            url: "http://localhost:8080/GetCampaignStatus"
         });
     };
 });
@@ -130,25 +83,102 @@ app.controller("WebApiCtrl", function ($scope, dataService) {
 
     $scope.data = null;
 
-
-    dataService.getData(choosedSeason, sliderVal, sliderVal).then(function (dataResponse) {
-        $scope.data = dataResponse;
+    // initierar alla variabler som behövs från början
+    dataService.getCampaign().then(function (response) {
+        $scope.campaign = response.data;
+        currentSeason = response.data.campaign_status[0].season;
+        choosedSeason=currentSeason;
+        createSelectOptions();
+        run(response.data.statistics);
+        $scope.calculation = getCalculations();
+        getInitData();
     });
-
-    $scope.getSnaps = function () {
-
-        dataService.getData(choosedSeason, sliderVal, sliderVal).then(function (dataResponse) {
-            $scope.data = dataResponse;
+    // får en snapshots som senare används för att extraherar nödvändiga tider
+    function getInitData(){
+        dataService.getData(choosedSeason,null,null).then(function (dataResponse) {
+            $scope.dataNotNeeded=dataResponse;
+            extractInitData(dataResponse.data.snapshots);
+            doSnap(lastDay,lastDay);
         });
+    }
+    // extraherar nödvändiga värden som behövs från början från en snapshot
+    function extractInitData(dataa){
+        firstDay=dataa[0].time;
+        var length=dataa.length;
+        lastDay=dataa[length-1].time;
+        sliderlength=length;
+    }
+
+    // initierar data igen & beräknar den valda tidspunkten från slidern för att få en tillämplig snapshot
+    $scope.allData = function () {
+        var slidValue=(Math.ceil(sliderVal-1)*86400)+firstDay;
+        calculatedTime=slidValue;
+        doSnap(firstDay,slidValue);
     };
 
-    /**
-     * Teddy & Co modified:
-     */
-    $scope.evalSlider = function () {
-        dataService.getData(choosedSeason, sliderVal, sliderVal).then(function (dataResponse) {
-            $scope.data = dataResponse;
+    // hämtar samtliga snapshots och registrera nödvändig info
+    $scope.allDataAgain=function () {
+        dataService.getData(choosedSeason,null,null).then(function (dataResponse) {
+            $scope.dataNotNeeded=dataResponse;
+            extractInitData(dataResponse.data.snapshots);
+            $scope.data=null;
+            calculatedTime=(Math.ceil(sliderVal-1)*86400)+firstDay;
+            doSnap(firstDay,calculatedTime);
         });
+    };
+    // hämtar en snapshot beroende av tiden som skickas in
+    function doSnap(first,lastDay){
+        dataService.getData(choosedSeason, first, lastDay).then(function (dataResponse) {
+            $scope.data=dataResponse;
+            extractPoints(dataResponse.data.snapshots);
+       //     $scope.baba=extractPoints(dataResponse.data.snapshots);
+        //  var lol=main(sliderVal,firstTakenPoints, lastTakenPoints);
+        });
+    }
+    // extraherar poäng från alla enemy typer + global enemy från en vald snapshot
+    function extractPoints(dataa){
+        var global=null,enemy0=null, enemy1=null, enemy2=null;
+        var start=[], end=[];
+        var enemyTypes=[], enemyLerps=[];
+
+        for(var i =0;i<dataa.length;i++){
+            var extract=JSON.parse(dataa[i].data);
+
+            for(var j=0;j<extract.length;j++){
+                global+=extract[j].points_taken;
+
+                if(j==0){
+                    enemy0+=extract[j].points_taken;
+                }else if(j==1){
+                    enemy1+=extract[j].points_taken;
+                }else{
+                    enemy2+=extract[j].points_taken;
+                }
+            }
+        }
+        document.write("Global: "+global+" ,enemy0: "+enemy0+" ,enemy1: "+enemy1+" ,enemy2: "+enemy2);
+        enemyTypes.push(enemy0);
+        enemyTypes.push(enemy1);
+        enemyTypes.push(enemy2);
+
+        /*
+        for(var len=0;i<enemyTypes.length;len++){
+            enemyLerps.push(main(sliderVal,enemyTypes[i]));
+        }
+        return enemy2;
+        /*
+        var extractFirst=JSON.parse(dataa[0].data);
+        firstTakenPoints=extractFirst[0].points_taken;
+
+        var secondTakenPoints=JSON.parse(dataa[dataa.length-1].data);
+        lastTakenPoints=secondTakenPoints[secondTakenPoints.length-1].points_taken;
+        */
+    }
+
+    // Ändrar dynamisk storleken på slidern beroende av den valda säsongen
+    $scope.getEventSize = function () {
+        $scope.len=sliderlength;
+        return $scope.len;
     };
 
     /**
@@ -162,20 +192,21 @@ app.controller("WebApiCtrl", function ($scope, dataService) {
         if(enemyType == "global_stats")
         {
 
-                console.log(season);
-                dataService.getSeasonStatistics(season).then(function (dataResponse) {
-                    console.log("in get season stats");
-                    console.log(dataResponse.data);
-                   $scope.data = dataResponse.data;
-                });
+            console.log(season);
+            dataService.getSeasonStatistics(season).then(function (dataResponse) {
+                console.log("in get season stats");
+                console.log(dataResponse.data);
+                $scope.data = dataResponse.data;
+            });
         }
         else //this means that other than global i chosen
         {
-            dataService.getData(choosedSeason, sliderVal, sliderVal).then(function (dataResponse) {
+            calculatedTime=(Math.ceil(sliderVal-1)*86400)+firstDay; // ÄNDRAT HÄR ***
+            $scope.data=null;
+            dataService.getData(choosedSeason, firstDay, calculatedTime).then(function (dataResponse) {
                 jsonData = dataResponse;
 
-
-               // console.log("allfilter=" + allFilter + "filterOption=" + filterOption);
+                // console.log("allfilter=" + allFilter + "filterOption=" + filterOption);
                 console.log(filterOption);
                 //save data to var
                 var result = [];
@@ -199,87 +230,28 @@ app.controller("WebApiCtrl", function ($scope, dataService) {
                     }
                 }
                 //save data to var end
-                    switch(filterOption)
-                    {
-                        case "defend_events":
-                            result = def_events;
-                            console.log("in defend_events");
-                            break;
-                        case "attack_events":
-                            result = atta_events;
-                            console.log("in attack_events");
-                            break;
-                        default:
-                            result = def_events.concat(atta_events);
-                            console.log("in default");
-                            console.log(result);
-                    }
+                switch(filterOption)
+                {
+                    case "defend_events":
+                        result = def_events;
+                        console.log("in defend_events");
+                        break;
+                    case "attack_events":
+                        result = atta_events;
+                        console.log("in attack_events");
+                        break;
+                    default:
+                        result = def_events.concat(atta_events);
+                        console.log("in default");
+                        console.log(result);
+                }
 
                 $scope.data = result;
             });
         }
     };
 
-    function test(j, timestamp, nowtimestamp){
-        dataService.getData(choosedSeason, timestamp, nowtimestamp).then(function (dataResponse) {
-
-            // $scope.data = dataResponse;
-            if(j==0){
-                one=dataResponse.data.defend_events[0].points;
-          //      document.write("lol1: "+one);
-                timestamp-=3600000;
-            }
-            if(j==1){
-                two=dataResponse.data.defend_events[0].points;
-          //      document.write("One: "+one +" ,two :"+two +"<br />");
-          //      document.write(" FUNKAR: "+runLinear(sliderVal,one,two));
-            //    document.write("lol 2: "+two);
-            }
-        });
-
-    }
-
-    $scope.getSeason = function () {
-        dataService.getCampaign().then(function (dataResponse) {
-            $scope.trubble = dataResponse;
-            currentSeason = dataResponse.data.campaign_status[1].season;
-            createSelectOptions();
-            run(dataResponse.data.statistics);
-            $scope.calculation=getCalculations();
-        });
-    };
-
-    $scope.defaultSlide = function () {
-        return 1;
-    };
-
-    // möjliggöra dynamisk ändring --> kommer att användas senare
-    $scope.getEventSize = function () {
-        return 30;
-    };
-
-    /**fixed currentsSeason in getCampaign function. It gets the currentSeason**/
-    dataService.getCampaign().then(function (response) {
-
-        $scope.campaign = response.data;
-        currentSeason = response.data.campaign_status[0].season;
-        run(response.data.statistics);
-        $scope.calculation=getCalculations();
-    });
-
-    /**
-     * Teddy & Co modified:
-     */
-    $scope.selectStatisticsInSeason = function (){
-        enemyType=document.getElementById('enemyType').value;
-    };
-
-    /**
-     * Teddy & Co added:
-     */
     $scope.filterData = function(){
-
-
         var element = document.getElementById('all');
         if(element.firstElementChild.nextElementSibling==null)
         {
@@ -288,18 +260,16 @@ app.controller("WebApiCtrl", function ($scope, dataService) {
 
         if(jsonData != null && element.firstElementChild.nextElementSibling==null)
         {
-            for(var datafiltered  in jsonData.data)
+            for(var datafiltered  in jsonData.data) 
             {
                 var option = document.createElement("option");
                 option.text = datafiltered;
                 //console.log(option);
                 element.add(option);
             }
-
             /**
              * this part of filtering is not used
              * **/
         }
-    }
-
+    };
 });
