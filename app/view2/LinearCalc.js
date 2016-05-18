@@ -13,6 +13,7 @@ function main(reqTime, stPoints, enPoints){
     endPoints = enPoints;
   //  document.write("requ: "+requestedTime+" ,start: "+startPoints+" ,end: "+endPoints);
     getT();
+
     return lerp(startPoints, endPoints, convertedTime);
 }
 
@@ -26,5 +27,6 @@ function getT(){
 function lerp(a, b, t) {
     
     var x = a + t * (b - a);
+    
     return x;
 }
