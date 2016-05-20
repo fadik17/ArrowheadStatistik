@@ -7,9 +7,11 @@ var enemyType = "global_stats";
 var choosedSeason = 1;
 var currentSeason = 1;
 var flagg = false;
-var firstDay = null, lastDay = null, sliderlength = null;
-var calculatedTime = null;
+var firstDay=null,lastDay=null,sliderlength=null;
+var calculatedTime=null;
 var jsonData = null;
+
+var se=[];
 
 function evalSlider2() {
 
@@ -17,17 +19,16 @@ function evalSlider2() {
     document.getElementById('sliderValue').innerHTML = sliderVal;
 
     var integer = sliderVal | 0;
-    var float = sliderVal % integer;
+    var float=sliderVal%integer;
 
-    if (float > 0.99) {
-
-        sliderVal = integer + 1;
-        document.getElementById('sliderValue').innerHTML = sliderVal;
-        float = 0;
+    if(float > 0.99){
+        sliderVal=integer+1;
+        document.getElementById('sliderValue').innerHTML= sliderVal;
+        float=0;
     }
 }
 
-function saveSeason() {
+function saveSeason(){
 
     choosedSeason = document.getElementById('seasons').value;
 }
@@ -59,7 +60,7 @@ var app = angular.module('app', [], function ($httpProvider) {
 
 
 app.service('dataService', function ($http) {
-
+/*
     this.getData = function (season, start, end) {
 
         // $http() returns a $promise that we can add handlers with .then()
@@ -77,6 +78,42 @@ app.service('dataService', function ($http) {
             method: 'GET',
             url: "http://localhost:8080/GetCampaignStatus"
         });
+    };*/
+
+    this.getData = function (season, start, end) {
+
+        /**
+         * Teddy & Co modified following:
+         */
+        // $http() returns a $promise that we can add handlers with .then()
+        return $http({
+
+            method: 'POST',
+            url: 'https://api.helldiversgame.com/1.0/',
+            data : "action=get_snapshots" + "&season=" + season + "&start=" + start + "&end=" + end
+        });
+    };
+
+    this.getCampaign = function () {
+
+        /**
+         * Teddy & Co modified following:
+         */
+
+        return $http({
+            method: "POST",
+            url: 'https://files.arrowheadgs.com/helldivers_api/default/',
+            data :'action=get_campaign_status'
+        });
+    };
+
+    this.getSeasonStatistics = function(season) {
+
+        return $http({
+            method: 'POST',
+            url:"https://files.arrowheadgs.com/helldivers_api/default/",
+            data :'action=get_season_statistics' + "&season=" + season
+        });
     };
 });
 
@@ -87,119 +124,134 @@ app.controller("WebApiCtrl", function ($scope, dataService) {
 
     // initierar alla variabler som behövs från början
     dataService.getCampaign().then(function (response) {
-
         $scope.campaign = response.data;
         currentSeason = response.data.campaign_status[0].season;
-        choosedSeason = currentSeason;
+        choosedSeason=currentSeason;
         createSelectOptions();
-        run(response.data.statistics);
-        $scope.calculation = getCalculations();
-        getInitData();
+    //  run(response.data.statistics);
+    //  $scope.calculation = getCalculations();
+    //  getInitData();
+        pop(currentSeason);
+        $scope.data=getGet();
+    //    printSnap();
     });
 
+
+    function pop(lastSeason){
+        for(var i=1;i<=lastSeason;i++){
+            dataService.getData(i,null,null).then(function (dataResponse) {
+                extractEverything(dataResponse,i);
+            });
+        }
+    //    var tmp=printSnap(0);
+    //    document.write("FUNK: "+tmp[0].time);
+    }
     // får en snapshots som senare används för att extraherar nödvändiga tider
-    function getInitData() {
+    function getInitData(){
 
-        dataService.getData(choosedSeason, null, null).then(function (dataResponse) {
+        dataService.getData(choosedSeason,null,null).then(function (dataResponse) {
 
-            $scope.dataNotNeeded = dataResponse;
-            extractInitData(dataResponse.data.snapshots);
-            doSnap(lastDay, lastDay);
+           $scope.data=dataResponse.snapshots;
+         //   se.push(dataResponse.data.snapshots);
+         //   se.push(dataResponse.snapshots);
+        //    document.write(se[lol].time[0]);
+        //    extractInitData(dataResponse.data.snapshots);
+        //    doSnap(lastDay,lastDay);
+        //     return (dataResponse.snapshots[lol].time);
         });
     }
 
-    // extraherar nödvändiga värden som behövs från början från en snapshot
-    function extractInitData(dataa) {
 
-        firstDay = dataa[0].time;
-        var length = dataa.length;
-        lastDay = dataa[length - 1].time;
-        sliderlength = length;
+    // extraherar nödvändiga värden som behövs från början från en snapshot
+    function extractInitData(dataa){
+
+        firstDay=dataa[0].time;
+        var length=dataa.length;
+        lastDay=dataa[length-1].time;
+        sliderlength=length;
     }
 
     // initierar data igen & beräknar den valda tidspunkten från slidern för att få en tillämplig snapshot
     $scope.allData = function () {
 
-        var slidValue = (Math.ceil(sliderVal - 1) * 86400) + firstDay;
-        calculatedTime = slidValue;
-        doSnap(firstDay, slidValue);
+        var slidValue=(Math.ceil(sliderVal-1)*86400)+firstDay;
+        calculatedTime=slidValue;
+        doSnap(firstDay,slidValue);
     };
 
     // hämtar samtliga snapshots och registrera nödvändig info
-    $scope.allDataAgain = function () {
+    $scope.allDataAgain=function () {
 
-        dataService.getData(choosedSeason, null, null).then(function (dataResponse) {
+        dataService.getData(choosedSeason,null,null).then(function (dataResponse) {
 
-            $scope.dataNotNeeded = dataResponse;
+            $scope.dataNotNeeded=dataResponse;
             extractInitData(dataResponse.data.snapshots);
-            $scope.data = null;
-            calculatedTime = (Math.ceil(sliderVal - 1) * 86400) + firstDay;
-            doSnap(firstDay, calculatedTime);
+            $scope.data=null;
+            calculatedTime=(Math.ceil(sliderVal-1)*86400)+firstDay;
+            doSnap(firstDay,calculatedTime);
         });
     };
     // hämtar en snapshot beroende av tiden som skickas in
-    function doSnap(first, lastDay) {
+    function doSnap(first,lastDay){
 
         dataService.getData(choosedSeason, first, lastDay).then(function (dataResponse) {
 
-            $scope.data = dataResponse;
+            $scope.data=dataResponse;
             extractPoints(dataResponse.data.snapshots);
-            //     $scope.baba=extractPoints(dataResponse.data.snapshots);
-            //  var lol=main(sliderVal,firstTakenPoints, lastTakenPoints);
+       //     $scope.baba=extractPoints(dataResponse.data.snapshots);
+        //  var lol=main(sliderVal,firstTakenPoints, lastTakenPoints);
         });
     }
-
     // extraherar poäng från alla enemy typer + global enemy från en vald snapshot
-    function extractPoints(dataa) {
+    function extractPoints(dataa){
 
-        var global = null, enemy0 = null, enemy1 = null, enemy2 = null;
-        var start = [], end = [];
-        var enemyTypes = [], enemyLerps = [];
+        var global=null,enemy0=null, enemy1=null, enemy2=null;
+        var start=[], end=[];
+        var enemyTypes=[], enemyLerps=[];
 
-        for (var i = 0; i < dataa.length; i++) {
+        for(var i =0;i<dataa.length;i++){
 
-            var extract = JSON.parse(dataa[i].data);
+            var extract=JSON.parse(dataa[i].data);
 
-            for (var j = 0; j < extract.length; j++) {
+            for(var j=0;j<extract.length;j++){
 
-                global += extract[j].points_taken;
+                global+=extract[j].points_taken;
 
-                if (j == 0) {
+                if(j==0){
 
-                    enemy0 += extract[j].points_taken;
-                } else if (j == 1) {
+                    enemy0+=extract[j].points_taken;
+                }else if(j==1){
 
-                    enemy1 += extract[j].points_taken;
-                } else {
+                    enemy1+=extract[j].points_taken;
+                }else{
 
-                    enemy2 += extract[j].points_taken;
+                    enemy2+=extract[j].points_taken;
                 }
             }
         }
-
-        document.write("Global: " + global + " ,enemy0: " + enemy0 + " ,enemy1: " + enemy1 + " ,enemy2: " + enemy2);
+     //   document.write("Global: "+global+" ,enemy0: "+enemy0+" ,enemy1: "+enemy1+" ,enemy2: "+enemy2);
         enemyTypes.push(enemy0);
         enemyTypes.push(enemy1);
         enemyTypes.push(enemy2);
 
         /*
-         for(var len=0;i<enemyTypes.length;len++){
-         enemyLerps.push(main(sliderVal,enemyTypes[i]));
-         }
-         return enemy2;
-         /*
-         var extractFirst=JSON.parse(dataa[0].data);
-         firstTakenPoints=extractFirst[0].points_taken;
+        for(var len=0;i<enemyTypes.length;len++){
+            enemyLerps.push(main(sliderVal,enemyTypes[i]));
+        }
+        return enemy2;
+        /*
+        var extractFirst=JSON.parse(dataa[0].data);
+        firstTakenPoints=extractFirst[0].points_taken;
 
-         var secondTakenPoints=JSON.parse(dataa[dataa.length-1].data);
-         lastTakenPoints=secondTakenPoints[secondTakenPoints.length-1].points_taken;
-         */
+        var secondTakenPoints=JSON.parse(dataa[dataa.length-1].data);
+        lastTakenPoints=secondTakenPoints[secondTakenPoints.length-1].points_taken;
+        */
     }
 
     // Ändrar dynamisk storleken på slidern beroende av den valda säsongen
     $scope.getEventSize = function () {
 
-        $scope.len = sliderlength;
+        $scope.len=sliderlength;
         return $scope.len;
     };
 
@@ -207,32 +259,29 @@ app.controller("WebApiCtrl", function ($scope, dataService) {
      * Teddy & Co modified:
      */
     $scope.camp = function () {
-
-        enemyType = document.getElementById('enemyType').value;
+        enemyType=document.getElementById('enemyType').value;
         var filterOption = document.getElementById('all').value;
         var season = document.getElementById('seasons').value;
         console.log(enemyType);
-
-        if (enemyType == "global_stats") {
-
+        if(enemyType == "global_stats")
+        {
             console.log(season);
-
             dataService.getSeasonStatistics(season).then(function (dataResponse) {
 
                 console.log("in get season stats");
                 console.log(dataResponse.data);
-                $scope.data = dataResponse.data;
+           //     $scope.data=null;
+           //     $scope.data = dataResponse.data;
             });
         }
-        else { //this means that other than global i chosen
+        //this means that other than global i chosen
+        else {
 
-            calculatedTime = (Math.ceil(sliderVal - 1) * 86400) + firstDay; // ÄNDRAT HÄR ***
-            $scope.data = null;
-
+        /*  calculatedTime=(Math.ceil(sliderVal-1)*86400)+firstDay; // ÄNDRAT HÄR ***
+            document.write("DD: "+calculatedTime);*/
             dataService.getData(choosedSeason, firstDay, calculatedTime).then(function (dataResponse) {
 
                 jsonData = dataResponse;
-
                 // console.log("allfilter=" + allFilter + "filterOption=" + filterOption);
                 console.log(filterOption);
                 //save data to var
@@ -241,24 +290,23 @@ app.controller("WebApiCtrl", function ($scope, dataService) {
                 var def_events = [];
                 var atta_events = [];
 
-                for (var i = 0; i < dataResponse.data.defend_events.length; i++) {
+                for(var i=0;i<dataResponse.data.defend_events.length;i++) {
 
-                    if (enemyType == dataResponse.data.defend_events[i].enemy) {
+                    if(enemyType == dataResponse.data.defend_events[i].enemy) {
 
                         console.log(dataResponse.data.defend_events[i]);
                         def_events.push(dataResponse.data.defend_events[i]);
                     }
                 }
+                for(var i=0;i<dataResponse.data.attack_events.length;i++) {
 
-                for (var i = 0; i < dataResponse.data.attack_events.length; i++) {
-
-                    if (enemyType == dataResponse.data.attack_events[i].enemy) {
+                    if(enemyType == dataResponse.data.attack_events[i].enemy) {
 
                         atta_events.push(dataResponse.data.attack_events[i]);
                     }
                 }
                 //save data to var end
-                switch (filterOption) {
+                switch(filterOption) {
 
                     case "defend_events":
                         result = def_events;
@@ -273,25 +321,25 @@ app.controller("WebApiCtrl", function ($scope, dataService) {
                         console.log("in default");
                         console.log(result);
                 }
-
-                $scope.data = result;
+            //    $scope.data=null;
+           //     $scope.data = result;
             });
         }
     };
 
-    $scope.filterData = function () {
+    $scope.filterData = function(){
 
         var element = document.getElementById('all');
 
-        if (element.firstElementChild.nextElementSibling == null) {
+        if(element.firstElementChild.nextElementSibling==null) {
 
             console.log("det är null");
         }
 
-        if (jsonData != null && element.firstElementChild.nextElementSibling == null) {
+        if(jsonData != null && element.firstElementChild.nextElementSibling==null) {
 
-            for (var datafiltered  in jsonData.data) {
-
+            for(var datafiltered  in jsonData.data) {
+                
                 var option = document.createElement("option");
                 option.text = datafiltered;
                 //console.log(option);

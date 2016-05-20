@@ -15,9 +15,11 @@
     <script src="MainpageData.js"></script>
     <script src="Calculation.js"></script>
     <script src="LinearCalc.js"></script>
+    <script src="ExtractAllData.js"></script>
     <link rel="stylesheet" type="text/css" href="MainpageDesign.css">
     <link rel="stylesheet" type="text/css" href="rangeBarDesign.css">
     <link rel="stylesheet" type="text/css" href="droplistDesign.css">
+
 </head>
 
 <body ng-app="app">
@@ -34,7 +36,7 @@
         </p>
 
         <input style="width:500px;" type="range" id="rating" min="1" max="{{getEventSize()}}" value="1" step="0.01"
-               onchange="angular.element(this).scope().allData();evalSlider2();" oninput="evalSlider2()"/>
+               onchange="angular.element(this).scope().allData();evalSlider2();angular.element(this).scope().camp();" oninput="evalSlider2()"/>
             <br /><br/>
         <br/>
 
@@ -42,7 +44,7 @@
             <option value="">Season</option>
         </select>
 
-        <select id="enemyType" name="Faction" data-value="bugs" onchange="angular.element(this).scope().camp()">
+        <select id="enemyType" name="Faction" data-value="bugs" onmouseover="angular.element(this).scope().filterData();" onchange="angular.element(this).scope().camp()">
             <option value="global_stats">GlobalStats</option>
             <option value="0">Bugs</option>
             <option value="1">Illuminate</option>
@@ -411,6 +413,8 @@
             </li>
         </td>
     </table>
+
+    {{data}}
 </div>
 </body>
 </html>

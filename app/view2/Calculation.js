@@ -55,7 +55,9 @@ function kdRatioCalc(kills, deaths) {
 }
 
 function accidentialCalc(accidentals, kills) {
-
+    if(kills==0 || kills==null){
+        kills=1;
+    }
     return ((accidentals / kills) * 100);
 }
 
@@ -96,6 +98,5 @@ function missionSuccessCalc(successful_missions, missions) {
 }
 
 function getCalculations() {
-
     return enemyResult;
 }
