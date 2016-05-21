@@ -11,7 +11,6 @@ var firstDay=null,lastDay=null,sliderlength=null;
 var calculatedTime=null;
 var jsonData = null;
 
-var se=[];
 
 function evalSlider2() {
 
@@ -102,7 +101,7 @@ app.service('dataService', function ($http) {
 
         return $http({
             method: "POST",
-            url: 'https://files.arrowheadgs.com/helldivers_api/default/',
+            url: 'https://api.helldiversgame.com/1.0/',
             data :'action=get_campaign_status'
         });
     };
@@ -121,30 +120,30 @@ app.service('dataService', function ($http) {
 app.controller("WebApiCtrl", function ($scope, dataService) {
 
     $scope.data = null;
-
+// var e getSnapshorts här
     // initierar alla variabler som behövs från början
     dataService.getCampaign().then(function (response) {
         $scope.campaign = response.data;
         currentSeason = response.data.campaign_status[0].season;
         choosedSeason=currentSeason;
         createSelectOptions();
-    //  run(response.data.statistics);
-    //  $scope.calculation = getCalculations();
-    //  getInitData();
-        pop(currentSeason);
-        $scope.data=getGet();
-    //    printSnap();
+        pop(currentSeason); 
     });
 
 
     function pop(lastSeason){
-        for(var i=1;i<=lastSeason;i++){
-            dataService.getData(i,null,null).then(function (dataResponse) {
+        for(var i=1;i<=lastSeason;i++){ // loppar igenom det och hämtar statistiken för varje säsong
+            dataService.getData(i,null,null).then(function (dataResponse) { // skickar in och sparar
+
                 extractEverything(dataResponse,i);
+           //     lol[lol.length]=dataResponse.data.snapshots;
+           //     document.write("lol: "+lol[0].data.season);
             });
         }
-    //    var tmp=printSnap(0);
-    //    document.write("FUNK: "+tmp[0].time);
+        $scope.campp=getSeasonsArray();
+        $scope.def=getDefend_evArray();
+        $scope.dude=getDo();
+
     }
     // får en snapshots som senare används för att extraherar nödvändiga tider
     function getInitData(){
