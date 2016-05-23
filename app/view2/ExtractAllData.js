@@ -3,6 +3,7 @@
  *
  */
 
+// nödvändiga arrayer
 var seasons=new Array(), seasonsLengths=[];
 var defend_ev=[], defend_ev_season=[];
 var attack_ev=[], attack_ev_season=[];
