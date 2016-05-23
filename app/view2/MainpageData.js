@@ -127,24 +127,33 @@ app.controller("WebApiCtrl", function ($scope, dataService) {
         currentSeason = response.data.campaign_status[0].season;
         choosedSeason=currentSeason;
         createSelectOptions();
-        pop(currentSeason); 
+        extractSeasons(currentSeason);
     });
 
 
-    function pop(lastSeason){
-        for(var i=1;i<=lastSeason;i++){ // loppar igenom det och hämtar statistiken för varje säsong
-            dataService.getData(i,null,null).then(function (dataResponse) { // skickar in och sparar
+    function extractSeasons(lastSeason){
 
-                extractEverything(dataResponse,i);
-           //     lol[lol.length]=dataResponse.data.snapshots;
-           //     document.write("lol: "+lol[0].data.season);
-            });
+        try{
+            for(var i=1;i<=lastSeason;i++){ // loppar igenom det och hämtar statistiken för varje säsong
+                dataService.getData(i,null,null).then(function (dataResponse) { // skickar in och sparar
+                    extractEverything(dataResponse);
+                });
+            }
+        }finally{
+            $scope.campp = getSeasonsArray();
+            $scope.def = getDefend_evArray();
         }
-        $scope.campp=getSeasonsArray();
-        $scope.def=getDefend_evArray();
-        $scope.dude=getDo();
-
     }
+
+
+    $scope.getInfoTest=function () {
+    //    $scope.campp=null;
+    //    $scope.campp=getDo();
+        var res=getSeasonAttackEvents(choosedSeason);  // returnerar information beroende av säsongen och dagen som skickas in
+
+        document.write("day 1: "+res[0].season +"  ,The tim is: "+res[0].event_id+ " ,start_time: "+res[0].start_time);
+    };
+
     // får en snapshots som senare används för att extraherar nödvändiga tider
     function getInitData(){
 
