@@ -55,7 +55,7 @@ var app = angular.module('app', [], function ($httpProvider) {
 
     $httpProvider.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded';
     $httpProvider.defaults.headers.post['Access-Control-Allow-Origin'] = '*';
-});
+})
 
 
 app.service('dataService', function ($http) {
@@ -120,16 +120,6 @@ app.service('dataService', function ($http) {
 app.controller("WebApiCtrl", function ($scope, dataService) {
 
     $scope.data = null;
-// var e getSnapshorts här
-    // initierar alla variabler som behövs från början
-    dataService.getCampaign().then(function (response) {
-        $scope.campaign = response.data;
-        currentSeason = response.data.campaign_status[0].season;
-        choosedSeason=currentSeason;
-        createSelectOptions();
-        extractSeasons(currentSeason);
-    });
-
 
     function extractSeasons(lastSeason){
 
