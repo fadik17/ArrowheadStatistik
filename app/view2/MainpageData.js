@@ -133,26 +133,33 @@ app.controller("WebApiCtrl", function ($scope, dataService) {
 
     function extractSeasons(lastSeason){
 
-        try{
-            for(var i=1;i<=lastSeason;i++){ // loppar igenom det och hämtar statistiken för varje säsong
-                dataService.getData(i,null,null).then(function (dataResponse) { // skickar in och sparar
-                    extractEverything(dataResponse);
-                });
-            }
-        }finally{
-            $scope.campp = getSeasonsArray();
-            $scope.def = getDefend_evArray();
+        for(var i=1;i<=lastSeason;i++){ // loppar igenom det och hämtar statistiken för varje säsong
+            dataService.getData(i,null,null).then(function (dataResponse) { // skickar in och sparar
+                extractEverything(dataResponse);
+            });
         }
+        $scope.campp = getSeasonsArray();
+        $scope.def = getDefend_evArray();
+        $scope.att=getAttack_evArray();
     }
 
 
     $scope.getInfoTest=function () {
     //    $scope.campp=null;
     //    $scope.campp=getDo();
-        var res=getSeasonAttackEvents(choosedSeason);  // returnerar information beroende av säsongen och dagen som skickas in
+        var seasonResult=getSeasonInfo(choosedSeason);  // returnerar information beroende av säsongen och dagen som skickas in
+     //   document.writeln("ATTACK SEASON start time:  "+res[0].start_time + " ,season : "+res[0].season);
+     //   document.write("day 1: "+res[0].season);
+    //    document.write("LENGTG: "+res[0].length);
 
-        document.write("day 1: "+res[0].season +"  ,The tim is: "+res[0].event_id+ " ,start_time: "+res[0].start_time);
+       var result= calculateLerp(seasonResult);
+
+        for(var counter=0;counter<t.length;counter++){
+            document.writeln("i: "+i+ "  ,result[i]: "+result[i]);
+        }
     };
+
+   
 
     // får en snapshots som senare används för att extraherar nödvändiga tider
     function getInitData(){

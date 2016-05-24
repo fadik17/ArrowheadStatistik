@@ -46,23 +46,25 @@ function getSnapshots(snapObject, currentSeasonLength){
 1. sparar alla defend events i en 1 dimensionell array
  */
 function getDefendEvents(defendObject, currentDefenseLength){
-    var globalSeason=defendObject[0].season;
-    for(var counter=0;counter<defendObject.length;counter++){
-        defend_ev [counter+currentDefenseLength]={
-            season: defendObject[counter].season,
-            event_id: defendObject[counter].event_id,
-            start_time: defendObject[counter].start_time,
-            end_time: defendObject[counter].end_time,
-            region: defendObject[counter].region,
-            enemy: defendObject[counter].enemy,
-            points_max: defendObject[counter].points_max,
-            points: defendObject[counter].points,
-            status: defendObject[counter].status,
-            players_at_start: defendObject[counter].players_at_start
-        };
+    if(defendObject !=null) {
+        var globalSeason = defendObject[0].season;
+        for (var counter = 0; counter < defendObject.length; counter++) {
+            defend_ev [counter + currentDefenseLength] = {
+                season: defendObject[counter].season,
+                event_id: defendObject[counter].event_id,
+                start_time: defendObject[counter].start_time,
+                end_time: defendObject[counter].end_time,
+                region: defendObject[counter].region,
+                enemy: defendObject[counter].enemy,
+                points_max: defendObject[counter].points_max,
+                points: defendObject[counter].points,
+                status: defendObject[counter].status,
+                players_at_start: defendObject[counter].players_at_start
+            };
+        }
     }
-    defend_ev_season[globalSeason]={
-        start:currentDefenseLength,
+    defend_ev_season[globalSeason] = {
+        start: currentDefenseLength,
         end: defend_ev.length
     }
 }
@@ -71,23 +73,25 @@ function getDefendEvents(defendObject, currentDefenseLength){
  1. sparar alla attackevents i en 1 dimensionell array
  */
 function getAttackEvents(attackObject, currentAttackLength){
-    var globalSeason=attackObject[0].season;
-    for(var counter=0;counter<attackObject.length;counter++){
-        attack_ev [counter+currentAttackLength]={
-            season: attackObject[counter].season,
-            event_id: attackObject[counter].event_id,
-            start_time: attackObject[counter].start_time,
-            end_time: attackObject[counter].end_time,
-            region: attackObject[counter].region,
-            enemy: attackObject[counter].enemy,
-            points_max: attackObject[counter].points_max,
-            points: attackObject[counter].points,
-            status: attackObject[counter].status,
-            players_at_start: attackObject[counter].players_at_start
-        };
+    if(attackObject !=null ) {
+        var globalSeason = attackObject[0].season;
+        for (var counter = 0; counter < attackObject.length; counter++) {
+            attack_ev [counter + currentAttackLength] = {
+                season: attackObject[counter].season,
+                event_id: attackObject[counter].event_id,
+                start_time: attackObject[counter].start_time,
+                end_time: attackObject[counter].end_time,
+                region: attackObject[counter].region,
+                enemy: attackObject[counter].enemy,
+                points_max: attackObject[counter].points_max,
+                points: attackObject[counter].points,
+                status: attackObject[counter].status,
+                players_at_start: attackObject[counter].players_at_start
+            };
+        }
     }
-    attack_ev_season[globalSeason]={
-        start:currentAttackLength,
+    attack_ev_season[globalSeason] = {
+        start: currentAttackLength,
         end: attack_ev.length
     }
 }
