@@ -91,9 +91,6 @@ app.controller("WebApiCtrl", function ($scope, dataService) {
         var seasonResult=getSeasonInfo(choosedSeason);  // returnerar information beroende av säsongen och dagen som skickas in
         var result= calculateLerp(seasonResult, sliderVal);
 
-        for(var counter=0;counter<t.length;counter++){
-            //document.writeln("i: "+i+ "  ,result[i]: "+result[i]);
-        }
     };
 
 

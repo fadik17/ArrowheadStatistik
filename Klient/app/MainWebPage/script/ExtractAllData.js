@@ -114,11 +114,12 @@ function getSnapshots(snapObject, currentSeasonLength){
         }
 
     }
-
     seasonsLengths[globalSeason]={
         start: currentSeasonLength,
         end: seasons.length
     };
+
+//    console.log("SAVING season: "+globalSeason + "starts: "+seasonsLengths[globalSeason].start + " and ends : "+seasonsLengths[globalSeason].end);
 }
 
 /*
@@ -206,18 +207,21 @@ function getSeasonInfo(season){
     var start= seasonsLengths[season].start;
     var end = seasonsLengths[season].end;
     var result=[];
-
     var startTmp=start;
-    var endTmp=end;
 
-    for(var xCount=0;xCount<end;xCount++){
-        result[xCount]=new Array(3);
+    console.log("Starttmp: "+startTmp + " end: "+end + " for season "+seasons[startTmp][0].season);
+    var tmpCounter=0;
 
-       for(var yCount=0;yCount<3;yCount++){
-           result[xCount][yCount]=seasons[startTmp][yCount];
-       }
-       startTmp++;
-   }
+    for(var xCount=start;xCount<end;xCount++){
+        result[tmp]=new Array(seasons[xCount].length);
+
+        for(var yCount=0;yCount<seasons[xCount].length;yCount++){
+            result[tmp][yCount]=seasons[startTmp][yCount];
+            console.log("seasons length: "+seasons[startTmp][yCount].season);
+        }
+        startTmp++;
+        tmp++;
+    }
     return result;
 }
 
