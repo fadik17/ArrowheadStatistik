@@ -14,7 +14,7 @@ var attack_ev=[], attack_ev_season=[];
 
 function extractEverything(JsonObj){
     console.log("seasons length"+seasons.length);
-    getSnapshots(JsonObj.data.snapshots, seasons.length);
+    getSnapshots(JsonObj.data.snapshots, seasons.length, JsonObj.data.points_max);
     getDefendEvents(JsonObj.data.defend_events, defend_ev.length);
     getAttackEvents(JsonObj.data.attack_events, attack_ev.length);
 }
@@ -92,9 +92,10 @@ initialize = function (dataService){
     });
 };
 
-function getSnapshots(snapObject, currentSeasonLength){
+function getSnapshots(snapObject, currentSeasonLength, pointsMaxObj){
     if(snapObject !=null){
         var globalSeason=null;
+
         for(var counter=0;counter<snapObject.length;counter++){
             var seasonTmp=snapObject[counter].season;
             var timeTmp= snapObject[counter].time;
@@ -104,15 +105,17 @@ function getSnapshots(snapObject, currentSeasonLength){
             seasons[counter+currentSeasonLength]=new Array(extract.length);
             for(var extractCount=0;extractCount<extract.length;extractCount++){ // antal data
                 seasons[counter+currentSeasonLength][extractCount]={
+                    pointsmax: pointsMaxObj[counter],
                     time: timeTmp,
                     season: seasonTmp,
                     points: extract[extractCount].points,
                     points_taken: extract[extractCount].points_taken,
                     status: extract[extractCount].status
                 };
+                console.log("pointsMax: "+seasons[counter+currentSeasonLength][extractCount].pointsmax);
             }
-        }
 
+        }
     }
     seasonsLengths[globalSeason]={
         start: currentSeasonLength,
