@@ -24,6 +24,8 @@ function run(jsonObj) {
 
                 season: globalSeason,
                 enemy: jsonObj[i].enemy,
+                kills: jsonObj[i].kills,
+                deaths: jsonObj[i].deaths,
                 accuracy: accuracy,
                 kdRatio: kdRatio,
                 missionsPercentage: missionsPercentage,

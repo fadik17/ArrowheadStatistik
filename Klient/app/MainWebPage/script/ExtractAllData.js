@@ -119,7 +119,7 @@ initialize = function (dataService){
 
     });
 
-    for(var counter=1;counter<=15;counter++) {
+    for(var counter=1;counter<=latestSeason;counter++) {
 
         dataService.getSeasonStatistics(counter).then(function (dataResponse) { // skickar in och sparar
 
