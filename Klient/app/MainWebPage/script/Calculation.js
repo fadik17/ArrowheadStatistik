@@ -31,7 +31,7 @@ function run(jsonObj) {
                 missionsPercentage: missionsPercentage,
                 defendPercentage: defendPercentage,
                 attackPercentage: attackPercentage,
-                accidentalKills: accidential,
+                accidentalKills: accidential
             };
         }
 

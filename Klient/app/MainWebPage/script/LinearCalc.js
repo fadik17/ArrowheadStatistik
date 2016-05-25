@@ -11,11 +11,9 @@ function main(reqTime, stPoints, enPoints){
     requestedTime = reqTime;
     startPoints = stPoints;
     endPoints = enPoints;
-  
-    //ent.writeln("requ: "+requestedTime+" ,start: "+startPoints+" ,end: "+endPoints);
+    
   
     getT();
-
     return lerp(startPoints, endPoints, convertedTime);
 }
 
@@ -35,25 +33,31 @@ function lerp(a, b, t) {
  returnerar ett array resultat där enemy0-2 och sista är globalstats!
  */
 function calculateLerp(res, sliderValue){
-    var tmpSlider= sliderVal, points_taken=null, globalStats=null;
+    var tmpSlider= sliderValue, globalStatsPoints=null, globalStatsPointsTaken=null;
     var lerpResult=[];
 
-    if(sliderVal % 1 !=0 && sliderVal!=0){
+    if(sliderValue % 1 !=0 && sliderValue!=0){
         tmpSlider = sliderValue | 0;
         tmpSlider++;
     }
 
     for(var day=0;day<res[day].length;day++){
-        lerpResult[day] = res[tmpSlider][day].points_taken;
-        globalStats+= res[tmpSlider][day].points_taken;
+        lerpResult[day] = {
+            points: res[tmpSlider-1][day].points,
+            points_taken: res[tmpSlider-1][day].points_taken,
+            globalStatsPoints: 0,
+            globalStatsPoints_taken: 0
+        };
 
-        if(day == res[day].length-1){
-            lerpResult[lerpResult.length]=globalStats;
-        }
+        globalStatsPoints+= res[tmpSlider-1][day].points;
+        globalStatsPointsTaken+=res[tmpSlider-1][day].points_taken;
     }
 
     for(var lerp=0;lerp<lerpResult.length;lerp++){
-        lerpResult[lerp] = main(sliderVal, 0, lerpResult[lerp]);
+        lerpResult[lerp].points = main(sliderValue, 0, lerpResult[lerp].points);
+        lerpResult[lerp].points_taken =  main(sliderValue, 0, lerpResult[lerp].points_taken);
+        lerpResult[lerp].globalStatsPoints= main(sliderValue, 0, globalStatsPoints);
+        lerpResult[lerp].globalStatsPoints_taken= main(sliderValue, 0, globalStatsPointsTaken);
     }
 
     return lerpResult;
