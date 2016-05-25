@@ -96,9 +96,8 @@ app.controller("WebApiCtrl", function ($scope, dataService) {
     }
 
     $scope.getInfoTest=function () {
-        var seasonResult=getSeasonInfo(choosedSeason);  // returnerar information beroende av säsongen och dagen som skickas in
-        var result= calculateLerp(seasonResult, sliderVal);
-
+        var brb= getSeasonStatstics(choosedSeason);
+        console.log("BRBING: "+brb[0].season);
     };
 
 
