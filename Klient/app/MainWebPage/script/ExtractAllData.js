@@ -96,6 +96,7 @@ app2.service('dataService', function ($http) {
 initialize = function (dataService){
 
     console.log("in initialize app2");
+    var test=null;
     dataService.getCampaign().then(function(dataResponse){
         latestSeason = dataResponse.data.campaign_status[0].season;
         console.log("current season = " +latestSeason);
@@ -119,7 +120,8 @@ initialize = function (dataService){
 
     });
 
-    for(var counter=1;counter<=latestSeason;counter++) {
+  //  document.writeln("LATEST SEASON: "+latestSeason);
+    for(var counter=1;counter<=15;counter++) {
 
         dataService.getSeasonStatistics(counter).then(function (dataResponse) { // skickar in och sparar
 
