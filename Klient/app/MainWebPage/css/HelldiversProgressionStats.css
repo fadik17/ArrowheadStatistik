@@ -51,12 +51,14 @@
 }
 #warStats{
     position: absolute;
-    overflow: auto;
+    overflow-x: auto;
+    overflow-y: auto;
     right: 0.5%;
     background: rgba(0,0,0,0.65);
     top: 10%;
     bottom: 50%;
     width: 25%;
+    padding: 0px 1px 2px 3px;
     color: #bbbbbb;
 }
 #mapURL{

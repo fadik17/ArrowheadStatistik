@@ -50,7 +50,7 @@ function run(jsonObj) {
 /*
     returnera statistiken beroende av säsongen som skickas in
  */
-function getSeasonStatstics(season){
+function getSavedSeasonStatstics(season){
 
     var result=[];
 

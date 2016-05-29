@@ -178,7 +178,7 @@ app.controller("WebApiCtrl", function ($scope, dataService) {
                 element.add(option);
             }
         }
-    }
+    };
 
     $scope.getImagePath = function(){
 
@@ -229,19 +229,23 @@ app.controller("WebApiCtrl", function ($scope, dataService) {
     };
     
     $scope.warStats=function () {
-        var stats=getSeasonStatstics(choosedSeason);
+        var stats=getSavedSeasonStatstics(choosedSeason);
+        var seasonStats=getSeasonInfo(choosedSeason);
+        var enemiesLerp=calculateLerp(seasonStats, 5.00);
+
+
         var events=[];
 
-      //  console.log("points in warStastS: : "+stats[0].defendPercentage);
         for(var counter=0;counter<stats.length;counter++){
             var dataText=[];
 
-            dataText.push("Enemy:"+counter+ "\n");
-            dataText.push(" Kills: "+stats[counter].kills + " Deaths: "+stats[counter].deaths+
-                " Accuracy:"+stats[counter].accuracy.toFixed(2)+"%"+" KD:"+stats[counter].kdRatio.toFixed(2)+ " Mission:"+stats[counter].missionsPercentage.toFixed(2)+ "%"+
-                " Defend:"+stats[counter].defendPercentage.toFixed(2)+ "%"+" Attack:"+stats[counter].attackPercentage.toFixed(2)+"%"+" Accidental kills:"+
-                stats[counter].accidentalKills.toFixed(2)+"%");
-            events.push(dataText);  
+            dataText.push("Enemy "+counter+ "\n");
+            dataText.push(" Kills: "+stats[counter].kills.toFixed(0) + "  Deaths: "+stats[counter].deaths.toFixed(0)+
+                " Accuracy:"+stats[counter].accuracy.toFixed(2)+"%"+"  KD:"+stats[counter].kdRatio.toFixed(2)+ " Successful missions:"+stats[counter].missionsPercentage.toFixed(2)+ "%"+
+                " Succesfull defend events:"+stats[counter].defendPercentage.toFixed(2)+ "%"+" Succesfull attack events:"+stats[counter].attackPercentage.toFixed(2)+"%"+" Accidental kills:"+
+                stats[counter].accidentalKills.toFixed(2)+"%" +" points: "+enemiesLerp[counter].points +" points taken: "+enemiesLerp[counter].points_taken);
+
+            events.push(dataText);
         }
 
         var table = document.getElementById("warfeed");
@@ -259,6 +263,8 @@ app.controller("WebApiCtrl", function ($scope, dataService) {
             td.className = "newsfeedDayColumn";
             td2.appendChild(document.createTextNode(datarow[1]));
             td2.className = "newsfeedStringColumn";
+
+
             tr.appendChild(td);
             tr.appendChild(td2);
             table.appendChild(tr);
