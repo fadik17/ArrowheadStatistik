@@ -48,11 +48,11 @@
                 <label>Day: </label>
                 <output id="sliderValue"></output>
             </p>
-            <button type="button"; onclick="angular.element(this).scope().playSlider()">Play</button>
+            <button type="button" onclick="angular.element(this).scope().playSlider()">Play</button>
             <input style="width:500px;" type="range" id="slider" min="{{defaultSlide()}}" max="angular.element(this).scope().setEventSize()" value="{{defaultSlide()}}" step="0.01"
-                   onchange="evalSlider2();" oninput="evalSlider2();angular.element(this).scope().newsFeed();angular.element(this).scope().getImagePath();"/>
+                   onchange="evalSlider2();" oninput="evalSlider2();angular.element(this).scope().newsFeed();angular.element(this).scope().warStats();angular.element(this).scope().getImagePath();"/>
             <!-- debug to stop the play button -->
-            <button type="button"; onclick="angular.element(this).scope().stopSlider()">Debug: Stop Play</button>
+            <button type="button" onclick="angular.element(this).scope().stopSlider()">Debug: Stop Play</button>
         </div>
         <br/>
         <!-- divion for the menu -->
@@ -65,11 +65,8 @@
             </select>
 
             <!-- För att få dropdown menyn att reagera korrekt i alla lägen, Teddy & Co -->
-<<<<<<< HEAD:Klient/app/MainWebPage/index.html
-            <select id="seasons"data-value="1" onchange="saveSeason();angular.element(this).scope().resetSlider();angular.element(this).scope().getInfoTest();angular.element(this).scope().camp();">
-=======
-            <select id="seasons"data-value="bugs" onchange="saveSeason();angular.element(this).scope().camp();">
->>>>>>> origin/master:Klient/app/MainWebPage/HelldiversProgressionStats.html
+
+            <select id="seasons"data-value="1" onchange="saveSeason();angular.element(this).scope().resetSlider();angular.element(this).scope().camp();">
                 <option value="">Season</option>
             </select>
 

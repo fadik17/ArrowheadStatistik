@@ -11,8 +11,6 @@ function main(reqTime, stPoints, enPoints){
     requestedTime = reqTime;
     startPoints = stPoints;
     endPoints = enPoints;
-    
-  
     getT();
     return lerp(startPoints, endPoints, convertedTime);
 }
@@ -29,7 +27,6 @@ function lerp(a, b, t) {
     return x;
 }
 
-
 /*
  1. om dagen är större än tillgängliga dagar
  2. om dagen är mindre än tillgängliga dagar (kanske början av säsongen)
@@ -38,37 +35,35 @@ function lerp(a, b, t) {
 
  returnerar ett array som innehåller resultat för enemy 0-2
  */
-
 function calculateLerp(res, sliderValue){
-    var tmpSlider= sliderValue, prevSlider=null, nextSlider=null;
+    var tmpSlider= 0, prevSlider=0, nextSlider=0;
     var lerpResult=[];
     var prev=[];
 
     if(sliderValue % 1 !=0 && sliderValue!=0){
         tmpSlider = sliderValue | 0;
+    }else{
+        tmpSlider=sliderValue;
     }
-
+    
     if(tmpSlider !=null && res.length > 0) {
-        
-        if (tmpSlider >= res.length || tmpSlider + 2 >= res.length) {
+        if (tmpSlider >= res.length || test >= res.length) {
             nextSlider = res.length - 1;
-            prevSlider = tmpSlider - 1;
+            tmpSlider--;
+            prevSlider = tmpSlider;
             prevSlider--;
-        }else if (tmpSlider <= 0 || tmpSlider-2 <= 0) {
+        }else if (tmpSlider <= 0 || (tmpSlider-2) <= 0) {
             prevSlider = 0;
-            nextSlider = tmpSlider + 1;
+            nextSlider = (tmpSlider + 1);
             nextSlider--;
         }else {
-            prevSlider = tmpSlider - 2;
+            prevSlider = (tmpSlider - 2);
             prevSlider--;
-            nextSlider = tmpSlider + 2;
+            nextSlider = (tmpSlider + 2);
             nextSlider--;
         }
 
-        //minska med ett eftersom dagen som motsvaras i season arrayen är -1 dvs dagn 1 är [0]
-        console.log("length : "+res.length+" ,tmpSlider: " + tmpSlider + "  ,nextSlider: " + nextSlider + "  ,prevSlider:" + prevSlider);
-
-        for (var day = 0; day < res[day].length; day++) {
+         for (var day = 0; day < res[day].length; day++) {
             lerpResult[day] = {
                 points: res[nextSlider][day].points,
                 points_taken: res[nextSlider][day].points_taken,

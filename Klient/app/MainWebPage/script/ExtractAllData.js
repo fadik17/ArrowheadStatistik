@@ -5,27 +5,17 @@
 var APIURL1 = "https://api.helldiversgame.com/1.0/";
 var APIURL2 = "https://files.arrowheadgs.com/helldivers_api/default/" ;
 var latestSeason;
-// nödvändiga arrayer
 var seasons=new Array(), seasonsLengths=[];
 var defend_ev=[], defend_ev_season=[];
 var attack_ev=[], attack_ev_season=[];
-
-
-
-
-/**
-
- * **/
 var allSeasons = []; // has every season data 1-current season
 var allAttackEvents = [];
 var allDefendEvents = [];
-/**
- * **/
+
 
 //change name in the future
 function getSeasonSnapshot(season)
 {
-    ;
     for(var i=0;i<allSeasons.length;i++)
     {
         if(allSeasons[i].snapshots[0].season  == season)
@@ -167,8 +157,6 @@ function extractEverything(JsonObj){
     //got to do same for defend event as attack events
     allDefendEvents.push(JsonObj.data.defend_events);
 
-
-
     getSnapshots(JsonObj.data.snapshots, seasons.length, JsonObj.data.points_max);
     getDefendEvents(JsonObj.data.defend_events, defend_ev.length);
     getAttackEvents(JsonObj.data.attack_events, attack_ev.length);
@@ -223,11 +211,8 @@ app2.service('dataService', function ($http) {
 });
 
 initialize = function (dataService){
-<<<<<<< HEAD
-=======
 
     console.log("in initialize app2");
->>>>>>> origin/master
     dataService.getCampaign().then(function(dataResponse){
         latestSeason = dataResponse.data.campaign_status[0].season;
 
@@ -237,26 +222,17 @@ initialize = function (dataService){
                 extractEverything(dataResponse);
             });
         }
-
-        //for stats ex. KD etc
         run(dataResponse.data.statistics);
-
         choosedSeason = currentSeason = latestSeason;
         createSelectOptions();
 
         for(var counter=1;counter<=latestSeason;counter++) {
-
-<<<<<<< HEAD
-    });
-=======
             dataService.getSeasonStatistics(counter).then(function (dataResponse) { // skickar in och sparar
 
                 run(dataResponse.data.statistics);
             });
         }
     });
-
->>>>>>> origin/master
 };
 
 function getSnapshots(snapObject, currentSeasonLength, pointsMaxObj){
@@ -323,8 +299,6 @@ function getDefendEvents(defendObject, currentDefenseLength){
 
 }
 
-
-
 /*
  1. sparar alla attackevents i en 1 dimensionell array
  */
@@ -355,10 +329,7 @@ function getAttackEvents(attackObject, currentAttackLength){
     {
         attack_ev_season[globalSeason]=null;
     }
-
-
 }
-
 
 // returnerar samtliga säsonger
 function getSeasonsArray(){
@@ -448,21 +419,9 @@ function getSeasonAttackEvents(season){
         var start = attack_ev_season[season].start;
         var end= attack_ev_season[season].end;
 
-
         for(var counter=start;counter<end;counter++){
             result[resultCounter++]=attack_ev[counter];
         }
-
     }
-
     return result;
-<<<<<<< HEAD
-
-=======
-}
-
-// returnerar antal säsonger som finns!
-function getSeasonCount(){
-    return seasonsLengths.length
->>>>>>> origin/master
 }

@@ -22,24 +22,11 @@ var intervalId = null;
 var noEnemys = 3; //
 
 function evalSlider2() {
-
     sliderVal = document.getElementById('slider').value;
     document.getElementById('sliderValue').innerHTML = sliderVal;
-
-    var integer = sliderVal | 0;
-    var float=sliderVal%integer;
-
-    if(float > 0.99){
-
-        sliderVal=integer+1;
-        document.getElementById('sliderValue').innerHTML= sliderVal;
-        float=0;
-    }
 }
 
 function createSelectOptions() {
-
-    //  document.write("in test: "+currentSeason);
     var x = document.getElementById('seasons');
     var i;
 
@@ -136,8 +123,7 @@ app.controller("WebApiCtrl", function ($scope, dataService) {
 
     // Ändrar dynamisk storleken på slidern beroende av den valda säsongen
     $scope.setEventSize = function () {
-
-        document.getElementById('slider').max = getLatestDayInSeason(choosedSeason, null)-0.02;//
+        document.getElementById('slider').max = getLatestDayInSeason(choosedSeason, null)-0.01;//
     };
 
     $scope.resetSlider = function() {
@@ -147,44 +133,13 @@ app.controller("WebApiCtrl", function ($scope, dataService) {
         $scope.setEventSize();
         $scope.getImagePath();
         $scope.newsFeed();
-    }
+        $scope.warStats();
+    };
 
     $scope.defaultSlide = function () {
-        //
         return 0;
     };
-
-    $scope.getInfoTest=function () {
-<<<<<<< HEAD
-        var seasonResult=getSeasonInfo(choosedSeason);  // returnerar information beroende av säsongen och dagen som skickas in
-        var result= calculateLerp(seasonResult, sliderVal);
-
-    };
-=======
->>>>>>> origin/master
-
-     // TESTAR seasonStastistics..
-        //  var brb= getSeasonStatstics(choosedSeason);
-     //   console.log("BRBING: "+brb[0].season);
-
-        // testar lerp...
-      //  var brb=getSeasonInfo(choosedSeason);
-      //  $scope.lol=calculateLerp(brb, 2,36); // skicka sliderValue när det funkar!
-
-        $scope.warStats();
-
-        /*
-        document.writeln("<br />");
-        document.write("ENEMY 0: "+bob[0].points + " points_t: "+bob[0].points_taken+" ,globalPoints: "+bob[0].globalStatsPoints + " ,globalPoints_t: "+bob[0].globalStatsPoints_taken);
-
-        document.writeln("<br />");
-        document.write("ENEMY 1: "+bob[1].points + " points_t: "+bob[1].points_taken+" ,globalPoints: "+bob[1].globalStatsPoints + " ,globalPoints_t: "+bob[1].globalStatsPoints_taken);
-
-        document.writeln("<br />");
-        document.write("ENEMY 2: "+bob[2].points + " points_t: "+bob[2].points_taken+" ,globalPoints: "+bob[2].globalStatsPoints + " ,globalPoints_t: "+bob[2].globalStatsPoints_taken);
-    */
-    };
-
+    
     
     /**
      * Teddy & Co modified:
@@ -273,24 +228,29 @@ app.controller("WebApiCtrl", function ($scope, dataService) {
     };
     
     $scope.warStats=function () {
+        evalSlider2();
         var stats=getSavedSeasonStatstics(choosedSeason);
         var seasonStats=getSeasonInfo(choosedSeason);
-        var enemiesLerp=calculateLerp(seasonStats, 5.00);
-
-
+        var enemiesLerp=calculateLerp(seasonStats, sliderVal);
         var events=[];
 
-<<<<<<< HEAD
-=======
         for(var counter=0;counter<stats.length;counter++){
             var dataText=[];
+            var enemy="";
 
-            dataText.push("Enemy "+counter+ "\n");
+            if(counter == 0){
+                enemy="Bugs:";
+            }else if(counter ==1){
+                enemy="Cyborgs:";
+            }else{
+                enemy="Illuminate:";
+            }
+
+            dataText.push(enemy+"\n");
             dataText.push(" Kills: "+stats[counter].kills.toFixed(0) + "  Deaths: "+stats[counter].deaths.toFixed(0)+
                 " Accuracy:"+stats[counter].accuracy.toFixed(2)+"%"+"  KD:"+stats[counter].kdRatio.toFixed(2)+ " Successful missions:"+stats[counter].missionsPercentage.toFixed(2)+ "%"+
                 " Succesfull defend events:"+stats[counter].defendPercentage.toFixed(2)+ "%"+" Succesfull attack events:"+stats[counter].attackPercentage.toFixed(2)+"%"+" Accidental kills:"+
-                stats[counter].accidentalKills.toFixed(2)+"%" +" points: "+enemiesLerp[counter].points +" points taken: "+enemiesLerp[counter].points_taken);
-
+                stats[counter].accidentalKills.toFixed(2)+"%" +" points: "+enemiesLerp[counter].points.toFixed(0) +" points taken: "+enemiesLerp[counter].points_taken.toFixed(0));
             events.push(dataText);
         }
 
@@ -317,7 +277,7 @@ app.controller("WebApiCtrl", function ($scope, dataService) {
         }
     };
     
->>>>>>> origin/master
+
     $scope.newsFeed = function(){
 
         var dataResponse = getSeasonInfo(choosedSeason);
@@ -367,8 +327,6 @@ app.controller("WebApiCtrl", function ($scope, dataService) {
                 table.deleteRow(0);
             }
 
-
-
             while(newsfeedText.length > 0 && (newsfeedText[0])[2] <= sliderVal){
                 var tr = document.createElement("tr");
                 var td = document.createElement("td");
@@ -402,20 +360,20 @@ app.controller("WebApiCtrl", function ($scope, dataService) {
             $scope.updateStats();
             dayStamp++;
         }, 500);
-    }
+    };
 
     $scope.updateStats = function () {
         evalSlider2();
+        $scope.warStats();
         $scope.newsFeed();
         $scope.getImagePath();
-    }
+    };
 
     $scope.stopSlider = function(){
         if(intervalId != null)
         {
             window.clearInterval(intervalId);
         }
-    }
-
+    };
 
 });
