@@ -45,9 +45,9 @@ function calculateLerp(res, sliderValue){
     }else{
         tmpSlider=sliderValue;
     }
-    
+
     if(tmpSlider !=null && res.length > 0) {
-        if (tmpSlider >= res.length || test >= res.length) {
+        if (tmpSlider >= res.length || (tmpSlider+2) >= res.length) {
             nextSlider = res.length - 1;
             tmpSlider--;
             prevSlider = tmpSlider;
