@@ -24,8 +24,10 @@
     -->
 
     <!--divison for stats: -->
-    <div id="globalStats">
-        {{globalData}}
+    <div id="warStats">
+        <table id="warfeed">
+        </table>
+        <div id="logo2"></div>
     </div>
 
     <div id="enemyStats">
@@ -35,6 +37,8 @@
         <div id="logo"></div>
 
     </div>
+
+
 
     <!-- division for menu-->
     <div id="DivPosition" >
@@ -61,7 +65,11 @@
             </select>
 
             <!-- För att få dropdown menyn att reagera korrekt i alla lägen, Teddy & Co -->
+<<<<<<< HEAD:Klient/app/MainWebPage/index.html
             <select id="seasons"data-value="1" onchange="saveSeason();angular.element(this).scope().resetSlider();angular.element(this).scope().getInfoTest();angular.element(this).scope().camp();">
+=======
+            <select id="seasons"data-value="bugs" onchange="saveSeason();angular.element(this).scope().camp();">
+>>>>>>> origin/master:Klient/app/MainWebPage/HelldiversProgressionStats.html
                 <option value="">Season</option>
             </select>
 

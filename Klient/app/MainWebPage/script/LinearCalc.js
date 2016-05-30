@@ -11,11 +11,9 @@ function main(reqTime, stPoints, enPoints){
     requestedTime = reqTime;
     startPoints = stPoints;
     endPoints = enPoints;
-  
-    //ent.writeln("requ: "+requestedTime+" ,start: "+startPoints+" ,end: "+endPoints);
+    
   
     getT();
-
     return lerp(startPoints, endPoints, convertedTime);
 }
 
@@ -31,30 +29,61 @@ function lerp(a, b, t) {
     return x;
 }
 
-/*
- returnerar ett array resultat där enemy0-2 och sista är globalstats!
- */
-function calculateLerp(res, sliderValue){
-    var tmpSlider= sliderVal, points_taken=null, globalStats=null;
-    var lerpResult=[];
 
-    if(sliderVal % 1 !=0 && sliderVal!=0){
+/*
+ 1. om dagen är större än tillgängliga dagar
+ 2. om dagen är mindre än tillgängliga dagar (kanske början av säsongen)
+ 3. alla andra fall
+ OBS: detta kommer returnera en tom array ifall vi befinner oss i början av säsogen!
+
+ returnerar ett array som innehåller resultat för enemy 0-2
+ */
+
+function calculateLerp(res, sliderValue){
+    var tmpSlider= sliderValue, prevSlider=null, nextSlider=null;
+    var lerpResult=[];
+    var prev=[];
+
+    if(sliderValue % 1 !=0 && sliderValue!=0){
         tmpSlider = sliderValue | 0;
-        tmpSlider++;
     }
 
-    for(var day=0;day<res[day].length;day++){
-        lerpResult[day] = res[tmpSlider][day].points_taken;
-        globalStats+= res[tmpSlider][day].points_taken;
+    if(tmpSlider !=null && res.length > 0) {
+        
+        if (tmpSlider >= res.length || tmpSlider + 2 >= res.length) {
+            nextSlider = res.length - 1;
+            prevSlider = tmpSlider - 1;
+            prevSlider--;
+        }else if (tmpSlider <= 0 || tmpSlider-2 <= 0) {
+            prevSlider = 0;
+            nextSlider = tmpSlider + 1;
+            nextSlider--;
+        }else {
+            prevSlider = tmpSlider - 2;
+            prevSlider--;
+            nextSlider = tmpSlider + 2;
+            nextSlider--;
+        }
 
-        if(day == res[day].length-1){
-            lerpResult[lerpResult.length]=globalStats;
+        //minska med ett eftersom dagen som motsvaras i season arrayen är -1 dvs dagn 1 är [0]
+        console.log("length : "+res.length+" ,tmpSlider: " + tmpSlider + "  ,nextSlider: " + nextSlider + "  ,prevSlider:" + prevSlider);
+
+        for (var day = 0; day < res[day].length; day++) {
+            lerpResult[day] = {
+                points: res[nextSlider][day].points,
+                points_taken: res[nextSlider][day].points_taken,
+            };
+
+            prev[day] = {
+                points: res[prevSlider][day].points,
+                points_taken: res[prevSlider][day].points_taken,
+            };
+        }
+
+        for (var lerp = 0; lerp < lerpResult.length; lerp++) {
+            lerpResult[lerp].points = main(sliderValue, prev[lerp].points, lerpResult[lerp].points);
+            lerpResult[lerp].points_taken = main(sliderValue, prev[lerp].points_taken, lerpResult[lerp].points_taken);
         }
     }
-
-    for(var lerp=0;lerp<lerpResult.length;lerp++){
-        lerpResult[lerp] = main(sliderVal, 0, lerpResult[lerp]);
-    }
-
     return lerpResult;
 }

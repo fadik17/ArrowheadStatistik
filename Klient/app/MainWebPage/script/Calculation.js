@@ -31,7 +31,7 @@ function run(jsonObj) {
                 missionsPercentage: missionsPercentage,
                 defendPercentage: defendPercentage,
                 attackPercentage: attackPercentage,
-                accidentalKills: accidential,
+                accidentalKills: accidential
             };
         }
 
@@ -50,7 +50,7 @@ function run(jsonObj) {
 /*
     returnera statistiken beroende av säsongen som skickas in
  */
-function getSeasonStatstics(season){
+function getSavedSeasonStatstics(season){
 
     var result=[];
 

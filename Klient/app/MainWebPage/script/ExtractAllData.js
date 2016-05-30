@@ -223,6 +223,11 @@ app2.service('dataService', function ($http) {
 });
 
 initialize = function (dataService){
+<<<<<<< HEAD
+=======
+
+    console.log("in initialize app2");
+>>>>>>> origin/master
     dataService.getCampaign().then(function(dataResponse){
         latestSeason = dataResponse.data.campaign_status[0].season;
 
@@ -239,8 +244,19 @@ initialize = function (dataService){
         choosedSeason = currentSeason = latestSeason;
         createSelectOptions();
 
+        for(var counter=1;counter<=latestSeason;counter++) {
 
+<<<<<<< HEAD
     });
+=======
+            dataService.getSeasonStatistics(counter).then(function (dataResponse) { // skickar in och sparar
+
+                run(dataResponse.data.statistics);
+            });
+        }
+    });
+
+>>>>>>> origin/master
 };
 
 function getSnapshots(snapObject, currentSeasonLength, pointsMaxObj){
@@ -440,5 +456,13 @@ function getSeasonAttackEvents(season){
     }
 
     return result;
+<<<<<<< HEAD
 
+=======
+}
+
+// returnerar antal säsonger som finns!
+function getSeasonCount(){
+    return seasonsLengths.length
+>>>>>>> origin/master
 }
